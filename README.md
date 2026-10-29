@@ -1,4 +1,4 @@
-# Workplace Compliance Advisory Desk (Mini Project 09)
+# Workplace Compliance Advisory Desk 
 
 A multi-agent service that answers HR compliance questions (gratuity, maternity benefit, workplace harassment) with **cited advisories grounded in provisions in force**, and escalates to legal counsel whenever it cannot verify an answer. It never gives a legal opinion.
 
@@ -69,4 +69,5 @@ Docs: `docs/architecture.md`, `docs/data_contract.md`, `docs/slo.md`, `docs/runb
 `app/` service code · `app/agents/` the two agents · `app/prompts/` versioned prompts · `app/corpus/` chunker, embedder, FAISS store, indexer · `eval/` scenarios and runner · `stub/` stub provider · `loadtest/` Locust + SLO · `observability/` Prometheus, Grafana (generated dashboard) · `contracts/` JSON Schemas · `scripts/` ops and demo · `tests/`.
 
 ## Honest status
-Verified in development without Docker (real Redis, FAISS, LangGraph, RQ, uvicorn processes via `scripts/run_local.sh`): 22 unit tests pass; the 23-scenario routing set passes against the stub; demonstration items 2-8 and 10 behave as described. **Not yet run:** `docker compose up` itself, Grafana/Jaeger/cAdvisor rendering, sentence-transformers embeddings, a real LLM provider, the real corpus, and the Locust/ablation/prompt-comparison numbers. Those need your machine; the commands above produce them. Do a full clean-clone `docker compose up` rehearsal before the demo (a failure to start scores zero).
+Verified in development without Docker (real Redis, FAISS, LangGraph, RQ, uvicorn processes via `scripts/run_local.sh`): 22 unit tests pass; the 23-scenario routing set passes against the stub; demonstration items 2-8 and 10 behave as described. 
+**Not yet run:** `docker compose up` itself, Grafana/Jaeger/cAdvisor rendering, sentence-transformers embeddings, a real LLM provider, the real corpus, and the Locust/ablation/prompt-comparison numbers. Those need your machine; the commands above produce them. Do a full clean-clone `docker compose up` rehearsal before the demo (a failure to start scores zero).
