@@ -1,0 +1,2 @@
+# Local embeddings (no API cost). Installed in the image when EMBEDDINGS=st (default).
+sentence-transformers>=2.7

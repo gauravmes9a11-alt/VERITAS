@@ -1,0 +1,10 @@
+SYNTHETIC DEV FIXTURE - paraphrased approximation of selected provisions. NOT the official text. This Act has been REPEALED (in force until 20 November 2025). Replace with the official PDF (see corpus/README.md) before the demo.
+
+1. Short title, extent, application and commencement.
+(3) It applies to every factory, mine, oilfield, plantation, port, railway company and shop or establishment in which ten or more persons are employed.
+
+4. Payment of gratuity.
+(1) Gratuity shall be payable to an employee on the termination of his employment after he has rendered continuous service for not less than five years, (a) on his superannuation; or (b) on his retirement or resignation; or (c) on his death or disablement due to accident or disease.
+Provided that the completion of continuous service of five years shall not be necessary where the termination of the employment of any employee is due to death or disablement.
+(2) For every completed year of service or part thereof in excess of six months, the employer shall pay gratuity to an employee at the rate of fifteen days' wages based on the rate of wages last drawn.
+(6) Notwithstanding anything in sub-section (1), the gratuity of an employee whose services have been terminated for riotous or disorderly conduct, or an act constituting an offence involving moral turpitude, may be forfeited.

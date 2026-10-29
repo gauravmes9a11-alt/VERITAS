@@ -1,0 +1,133 @@
+# docker compose up                       -> whole system from a clean clone
+# docker compose up --scale worker=3      -> 3 task-runner replicas (A7)
+# Deployment boundaries and why: docs/architecture.md
+x-app: &app
+  build: {context: ., dockerfile: docker/Dockerfile.app, args: {EMBEDDINGS: "${EMBEDDINGS:-st}"}}
+  env_file:
+    - .env.example
+    - {path: .env, required: false}      # your overrides win
+  environment: &appenv
+    REDIS_URL: redis://redis:6379/0
+    INDEX_ROOT: /data/index
+    CORPUS_DIR: /app/corpus
+    RESEARCHER_URL: http://researcher:8001
+    ADVISOR_URL: http://advisor:8002
+    OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
+    HF_HOME: /hf
+  restart: unless-stopped
+
+services:
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes: [redis_data:/data]
+    healthcheck: {test: ["CMD", "redis-cli", "ping"], interval: 5s, timeout: 3s, retries: 10}
+
+  indexer:                 # one-shot, idempotent corpus pipeline (D2); re-run any time
+    <<: *app
+    command: ["python", "-m", "app.corpus.indexer", "build"]
+    restart: "no"
+    volumes: [index_data:/data/index, "./corpus:/app/corpus:ro", hf_cache:/hf]
+
+  researcher:              # Agent 1: retrieval tools + bounded loop
+    <<: *app
+    command: ["uvicorn", "app.agents.researcher_service:app", "--host", "0.0.0.0", "--port", "8001"]
+    volumes: [index_data:/data/index:ro, hf_cache:/hf]
+    depends_on: {indexer: {condition: service_completed_successfully}, redis: {condition: service_healthy}}
+    healthcheck: &hc8001
+      test: ["CMD", "python", "-c", "import urllib.request,sys;sys.exit(0 if urllib.request.urlopen('http://localhost:8001/health').status==200 else 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+
+  advisor:                 # Agent 2: composition + verification, no retrieval tools
+    <<: *app
+    command: ["uvicorn", "app.agents.advisor_service:app", "--host", "0.0.0.0", "--port", "8002"]
+    volumes: [index_data:/data/index:ro, hf_cache:/hf]
+    depends_on: {indexer: {condition: service_completed_successfully}, redis: {condition: service_healthy}}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys;sys.exit(0 if urllib.request.urlopen('http://localhost:8002/health').status==200 else 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+
+  api:
+    <<: *app
+    command: ["uvicorn", "app.api:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports: ["8000:8000"]
+    depends_on: {redis: {condition: service_healthy}}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys;sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health').status==200 else 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  worker:                  # task runner / coordinator; no published port so it can be scaled
+    <<: *app
+    command: ["python", "-m", "app.worker"]
+    depends_on:
+      redis: {condition: service_healthy}
+      researcher: {condition: service_healthy}
+      advisor: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys;sys.exit(0 if urllib.request.urlopen('http://localhost:9101/metrics').status==200 else 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  stub-llm:                # stand-in provider for load tests and fault injection (D6, A5)
+    build: {context: ., dockerfile: docker/Dockerfile.stub}
+    env_file: [.env.example, {path: .env, required: false}]
+    ports: ["8080:8080"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys;sys.exit(0 if urllib.request.urlopen('http://localhost:8080/health').status==200 else 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.57
+    environment: {COLLECTOR_OTLP_ENABLED: "true"}
+    ports: ["16686:16686"]
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    volumes: ["./observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro"]
+    ports: ["9090:9090"]
+    restart: unless-stopped
+
+  cadvisor:                # per-container CPU/memory/uptime for the dashboard
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    volumes: ["/:/rootfs:ro", "/var/run:/var/run:ro", "/sys:/sys:ro", "/var/lib/docker/:/var/lib/docker:ro"]
+    ports: ["8081:8080"]
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:11.1.0
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-change-me}
+    volumes:
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports: ["3000:3000"]
+    depends_on: [prometheus]
+    restart: unless-stopped
+
+  eval:                    # docker compose run --rm eval python -m eval.run --label baseline
+    <<: *app
+    profiles: ["tools"]
+    command: ["python", "-m", "eval.run", "--label", "baseline"]
+    environment:
+      <<: *appenv
+      API_URL: http://api:8000
+    volumes: [index_data:/data/index:ro, "./results:/app/results", hf_cache:/hf]
+    depends_on: {api: {condition: service_healthy}}
+    restart: "no"
+
+volumes: {redis_data: {}, index_data: {}, hf_cache: {}}

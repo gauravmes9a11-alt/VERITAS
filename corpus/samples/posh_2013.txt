@@ -1,0 +1,32 @@
+SYNTHETIC DEV FIXTURE - paraphrased approximation of selected provisions. NOT the official text. Replace with the official PDF (see corpus/README.md) before the demo.
+
+3. Prevention of sexual harassment.
+(1) No woman shall be subjected to sexual harassment at any workplace.
+(2) Circumstances such as implied or explicit promise of preferential treatment, threat of detrimental treatment, or humiliating treatment affecting health or safety may amount to sexual harassment if connected with an act of sexual harassment.
+
+4. Constitution of the Internal Complaints Committee.
+(1) Every employer of a workplace shall, by order in writing, constitute a committee called the Internal Complaints Committee.
+Provided that where the offices or administrative units of the workplace are located at different places, the Internal Committee shall be constituted at all administrative units or offices.
+(2) The Internal Committee shall consist of a Presiding Officer who shall be a senior-level woman employee, not less than two members committed to the cause of women or with legal knowledge or social work experience, and one external member from a non-governmental organisation.
+(3) At least one-half of the total members so nominated shall be women.
+
+6. Constitution of the Local Committee.
+(1) The District Officer shall constitute a Local Committee for receiving complaints of sexual harassment from establishments where the Internal Committee has not been constituted on account of the establishment having less than ten employees, or if the complaint is against the employer himself.
+
+9. Complaint of sexual harassment.
+(1) Any aggrieved woman may make a complaint in writing of sexual harassment at the workplace to the Internal Committee, within a period of three months from the date of the incident.
+Provided that where such complaint cannot be made in writing, the Presiding Officer or any Member shall render all reasonable assistance to the woman for making the complaint in writing.
+Provided further that the Internal Committee may extend the time limit for a further period not exceeding three months, if satisfied that circumstances prevented the woman from filing a complaint within the said period.
+
+11. Inquiry into complaint.
+(1) Subject to the provisions of section 10, the Internal Committee shall proceed to make an inquiry into the complaint in accordance with the service rules applicable to the respondent.
+(4) The inquiry shall be completed within a period of ninety days.
+
+13. Inquiry report.
+(1) On the completion of the inquiry, the Committee shall provide a report of its findings to the employer within ten days of completion.
+
+19. Duties of employer.
+The employer shall provide a safe working environment, display the penal consequences of sexual harassment and the order constituting the Internal Committee, and organise workshops and awareness programmes at regular intervals.
+
+26. Penalty for non-compliance with provisions of the Act.
+(1) Where the employer fails to constitute an Internal Committee or contravenes other provisions, the employer shall be punishable with a fine which may extend to fifty thousand rupees.

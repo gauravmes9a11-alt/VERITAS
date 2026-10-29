@@ -1,0 +1,26 @@
+SYNTHETIC DEV FIXTURE - paraphrased approximation of selected provisions. NOT the official text. Replace with the official PDF (see corpus/README.md) before the demo.
+
+1. Short title, extent and commencement.
+(1) This Code may be called the Code on Social Security, 2020.
+(2) It extends to the whole of India and commences on the date notified by the Central Government.
+
+53. Payment of gratuity.
+(1) Gratuity shall be payable to an employee on the termination of his employment after he has rendered continuous service for not less than five years, (a) on his superannuation; or (b) on his retirement or resignation; or (c) on his death or disablement due to accident or disease.
+Provided that the completion of continuous service of five years shall not be necessary where the termination of the employment of any employee is due to death or disablement.
+Provided further that the completion of continuous service of five years shall not be necessary in the case of an employee employed on fixed term employment, where the employment ends on the expiry of the fixed term; gratuity shall be payable to such employee on a pro rata basis for the period of service rendered.
+(2) For every completed year of service or part thereof in excess of six months, the employer shall pay gratuity to an employee at the rate of fifteen days' wages based on the rate of wages last drawn by the employee concerned.
+Explanation.- In the case of a piece-rated employee, daily wages shall be computed on the average of the total wages received for a period of three months immediately preceding the termination of employment.
+(3) The amount of gratuity payable is subject to the ceiling notified by the Central Government.
+
+54. Forfeiture of gratuity.
+(1) The gratuity of an employee whose services have been terminated for any act which constitutes an offence involving moral turpitude shall be forfeited to the extent of the damage or loss caused.
+Provided that forfeiture shall not take effect unless the employee has been given an opportunity of being heard.
+
+59. Application of maternity benefit provisions.
+(1) The provisions on maternity benefit apply to every establishment, including a factory, mine, plantation or shop or establishment, as notified.
+
+60. Right to payment of maternity benefit.
+(1) Every woman shall be entitled to the payment of maternity benefit at the rate of the average daily wage for the period of her actual absence immediately preceding and including the day of her delivery and for the six weeks immediately following that day.
+Provided that no woman shall be entitled to maternity benefit unless she has actually worked in an establishment of the employer from whom she claims maternity benefit for a period of not less than eighty days in the twelve months immediately preceding the date of her expected delivery.
+Provided further that the maximum period for which a woman shall be entitled to maternity benefit shall be twenty-six weeks, of which not more than eight weeks shall precede the date of expected delivery, for a woman with fewer than two surviving children.
+(2) A woman who legally adopts a child below the age of three months shall be entitled to maternity benefit for a period of twelve weeks from the date the child is handed over to her.

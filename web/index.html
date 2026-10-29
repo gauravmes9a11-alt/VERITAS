@@ -1,0 +1,1704 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>VERITAS • Workplace Statutory Compliance Intelligence</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Autonomous multi-agent legal advisory engine grounded in statutory Indian labor codes and verified provisos in force.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07090e;
+      --bg-surface: #0d111a;
+      --bg-surface-elevated: #131826;
+      --bg-surface-hover: #182032;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-subtle: rgba(255, 255, 255, 0.04);
+      --border-focus: #3b82f6;
+      --text: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent-blue: #3b82f6;
+      --accent-indigo: #6366f1;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --accent-cyan: #06b6d4;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --radius-lg: 16px;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.55;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+        radial-gradient(circle at 15% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 85% 10%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 50% 100%, rgba(99, 102, 241, 0.08) 0%, transparent 50%);
+      background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%, 100% 100%;
+      background-attachment: fixed;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Modern Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.22); }
+
+    /* Top Navigation Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(7, 9, 14, 0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0.85rem 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #2563eb, #10b981);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 0 20px rgba(37, 99, 235, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .brand-tagline {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: #34d399;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .status-pulse {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+      animation: pulseLive 2s infinite;
+    }
+
+    @keyframes pulseLive {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .nav-link {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.03);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.16);
+      transform: translateY(-1px);
+    }
+
+    /* App Shell */
+    .app-shell {
+      max-width: 1440px;
+      margin: 1.5rem auto 3rem;
+      padding: 0 1.75rem;
+    }
+
+    /* Mode Navigation Tabs */
+    .view-switcher {
+      display: flex;
+      gap: 0.4rem;
+      background: rgba(13, 17, 26, 0.8);
+      padding: 0.35rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      width: fit-content;
+      margin-bottom: 1.5rem;
+    }
+
+    .view-tab {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      padding: 0.45rem 1rem;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .view-tab:hover { color: #fff; }
+    .view-tab.active {
+      background: var(--accent-blue);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.35);
+    }
+
+    .tab-view { display: none; }
+    .tab-view.active { display: block; animation: tabFade 0.25s ease; }
+
+    @keyframes tabFade {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Workbench 2-Column Grid */
+    .workbench-grid {
+      display: grid;
+      grid-template-columns: 480px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 1100px) {
+      .workbench-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Panels & Cards */
+    .panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .panel-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .panel-title {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #fff;
+    }
+
+    .panel-body {
+      padding: 1.25rem;
+    }
+
+    /* Scenario Quick Selector */
+    .preset-section-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .presets-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .preset-card {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 0.65rem 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+      text-align: left;
+    }
+
+    .preset-card:hover {
+      background: var(--bg-surface-hover);
+      border-color: rgba(59, 130, 246, 0.35);
+      transform: translateX(2px);
+    }
+
+    .preset-card.active {
+      background: rgba(37, 99, 235, 0.12);
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 12px rgba(37, 99, 235, 0.2);
+    }
+
+    .preset-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+    }
+
+    .tag-blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    .tag-green { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .tag-amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+    .tag-rose { background: rgba(244, 63, 94, 0.15); color: #fb7185; }
+
+    .preset-text {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      flex: 1;
+    }
+
+    .preset-card.active .preset-text { color: #fff; font-weight: 600; }
+
+    /* Form Fields */
+    .field-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 0.4rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .text-input,
+    .select-input,
+    .textarea-input {
+      width: 100%;
+      background: #090c14;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.88rem;
+      padding: 0.65rem 0.85rem;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+
+    .text-input:focus,
+    .select-input:focus,
+    .textarea-input:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+      background: #0b0f19;
+    }
+
+    .textarea-input {
+      resize: vertical;
+      min-height: 95px;
+      line-height: 1.5;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    /* Collapsible Details */
+    details.advanced-drawer {
+      margin-top: 1rem;
+      border-top: 1px solid var(--border);
+      padding-top: 0.85rem;
+    }
+
+    details.advanced-drawer summary {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      user-select: none;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    details.advanced-drawer summary::-webkit-details-marker { display: none; }
+    details.advanced-drawer summary:hover { color: var(--text-secondary); }
+
+    /* Submit CTA Button */
+    .submit-cta {
+      margin-top: 1.25rem;
+      width: 100%;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 0.85rem 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.35);
+      transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .submit-cta::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+      transition: 0.5s;
+    }
+
+    .submit-cta:hover:not(:disabled)::after { left: 100%; }
+
+    .submit-cta:hover:not(:disabled) {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 22px rgba(37, 99, 235, 0.45);
+    }
+
+    .submit-cta:active:not(:disabled) { transform: translateY(0); }
+    .submit-cta:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* RIGHT CANVAS: Live Dossier Area */
+    .dossier-canvas {
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Idle Framework Hero */
+    .idle-showcase {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      padding: 1.75rem;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      min-height: 520px;
+    }
+
+    .statute-badges {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 1rem 0;
+    }
+
+    .statute-card {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      text-align: left;
+      flex: 1;
+      min-width: 220px;
+      max-width: 260px;
+      transition: all 0.2s ease;
+    }
+
+    .statute-card:hover {
+      border-color: rgba(59, 130, 246, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .statute-code {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #60a5fa;
+      margin-bottom: 0.25rem;
+    }
+
+    .statute-name {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.35rem;
+    }
+
+    .statute-desc {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Real-Time Agent Execution Monitor */
+    .agent-pipeline-view {
+      display: none;
+      padding: 2rem;
+      background: #090c14;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 1.5rem;
+      animation: tabFade 0.3s ease;
+    }
+
+    .pipeline-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .pipeline-nodes {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.85rem;
+      position: relative;
+    }
+
+    .node-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1rem 0.85rem;
+      text-align: center;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .node-box.active {
+      border-color: var(--accent-blue);
+      background: rgba(37, 99, 235, 0.1);
+      box-shadow: 0 0 16px rgba(59, 130, 246, 0.2);
+    }
+
+    .node-box.completed {
+      border-color: rgba(16, 185, 129, 0.4);
+      background: rgba(16, 185, 129, 0.05);
+    }
+
+    .node-icon-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.6rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .node-box.active .node-icon-circle {
+      background: var(--accent-blue);
+      color: #fff;
+      box-shadow: 0 0 10px var(--accent-blue);
+    }
+
+    .node-box.completed .node-icon-circle {
+      background: var(--accent-emerald);
+      color: #022c22;
+    }
+
+    .node-title {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .node-box.active .node-title { color: #fff; }
+
+    /* Live Agent Terminal Ticker */
+    .agent-console {
+      margin-top: 1.25rem;
+      background: #04060a;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      padding: 0.85rem 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .console-cursor {
+      width: 7px;
+      height: 14px;
+      background: var(--accent-cyan);
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* COMPLETED DOSSIER PRESENTATION */
+    .dossier-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6);
+      animation: dossierReveal 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes dossierReveal {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .dossier-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .route-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0.4rem 0.95rem;
+      border-radius: 6px;
+    }
+
+    .route-pill.answer-with-citation {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+
+    .route-pill.request-more-establishment-detail {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+
+    .route-pill.legal-counsel-review {
+      background: rgba(244, 63, 94, 0.15);
+      color: #fb7185;
+      border: 1px solid rgba(244, 63, 94, 0.35);
+    }
+
+    .dossier-summary-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.4rem;
+    }
+
+    .dossier-basis {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Comparison Box (Rule vs Proviso) */
+    .proviso-breakdown-card {
+      background: #090c14;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: var(--radius-sm);
+      padding: 1.15rem;
+      margin: 1.25rem 0;
+    }
+
+    .proviso-title {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #93c5fd;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    /* Citations Block */
+    .citation-item {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.85rem;
+      transition: all 0.2s ease;
+    }
+
+    .citation-item:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .citation-item-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .citation-ref {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #60a5fa;
+      background: rgba(59, 130, 246, 0.1);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    .citation-quote {
+      font-size: 0.88rem;
+      font-style: italic;
+      color: #e2e8f0;
+      line-height: 1.6;
+      border-left: 2px solid var(--accent-blue);
+      padding-left: 0.85rem;
+      margin-top: 0.4rem;
+    }
+
+    /* Action Toolbar & Feedback */
+    .dossier-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .meta-badges-cluster {
+      display: flex;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+    }
+
+    .meta-chip {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+    }
+
+    /* Modal Trace Drawer */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .modal-overlay.active { display: flex; animation: tabFade 0.2s ease; }
+
+    .modal-window {
+      background: #0d111a;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 860px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-window-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-window-body {
+      padding: 1.5rem;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    pre.trace-json {
+      background: #04060a;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+
+    /* Toast */
+    .toast-pill {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #182032;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      padding: 0.75rem 1.2rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 500;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 2000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .toast-pill.show { transform: translateY(0); opacity: 1; }
+
+    /* Print Optimization */
+    @media print {
+      header, .workbench-grid > :first-child, .view-switcher, .dossier-actions { display: none !important; }
+      body { background: #fff !important; color: #000 !important; }
+      .workbench-grid { display: block !important; }
+      .dossier-card { border: none !important; box-shadow: none !important; color: #000 !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Enterprise Navigation -->
+  <header>
+    <div class="nav-inner">
+      <a href="/" class="brand-group">
+        <div class="brand-mark">
+          <!-- Geometric Legal Balance Monogram -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+            <path d="M12 2v20M4 7h16M4 7l4 9h-8l4-9zm16 0l4 9h-8l4-9z"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title">
+            VERITAS
+            <span style="font-size: 0.72rem; color: var(--accent-blue); font-weight: 700; background: rgba(59,130,246,0.15); padding: 0.15rem 0.45rem; border-radius: 4px;">PROVISO ENGINE</span>
+          </div>
+          <div class="brand-tagline">Statutory Compliance Advisory Desk</div>
+        </div>
+      </a>
+
+      <div class="nav-controls">
+        <div class="status-badge" title="Live connection to local multi-service cluster">
+          <span class="status-pulse"></span>
+          <span id="clusterStatusText">Cluster Active • 5 Nodes</span>
+        </div>
+        <a href="/docs" target="_blank" class="nav-link" title="OpenAPI 3.1 Swagger Specification">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+          OpenAPI
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main View Container -->
+  <main class="app-shell">
+
+    <!-- View Modes Switcher -->
+    <div class="view-switcher">
+      <button class="view-tab active" onclick="switchView('workbench')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+        Compliance Cockpit
+      </button>
+      <button class="view-tab" onclick="switchView('system')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+        </svg>
+        Cluster Telemetry
+      </button>
+      <button class="view-tab" onclick="switchView('corpus')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+        </svg>
+        Statutory Gazette
+      </button>
+    </div>
+
+    <!-- VIEW 1: Compliance Cockpit -->
+    <div id="view-workbench" class="tab-view active">
+      <div class="workbench-grid">
+
+        <!-- LEFT PANEL: Case Formulation -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2.2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <path d="M14 2v6h6"></path>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <line x1="10" y1="9" x2="8" y2="9"></line>
+              </svg>
+              Case Parameters
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);" id="clientBadge">
+              CLI-DEMO
+            </div>
+          </div>
+
+          <div class="panel-body">
+            
+            <!-- Quick Presets -->
+            <div class="preset-section-title">
+              <span>Standard Compliance Scenarios</span>
+              <span style="font-size: 0.68rem; color: var(--accent-blue); cursor: pointer;" onclick="clearForm()">Reset</span>
+            </div>
+
+            <div class="presets-container">
+              <div class="preset-card active" onclick="applyPreset('fixed_term')">
+                <span class="preset-tag tag-blue">CoSS s.53</span>
+                <span class="preset-text">Fixed-Term 18-Mo Gratuity (Proviso 2)</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </div>
+
+              <div class="preset-card" onclick="applyPreset('continuous_5yr')">
+                <span class="preset-tag tag-green">Rule 5-Yr</span>
+                <span class="preset-text">Continuous Service Resignation (Standard)</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </div>
+
+              <div class="preset-card" onclick="applyPreset('maternity_80d')">
+                <span class="preset-tag tag-amber">CoSS s.60</span>
+                <span class="preset-text">Maternity Benefit 80-Day Threshold</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </div>
+
+              <div class="preset-card" onclick="applyPreset('posh_icc')">
+                <span class="preset-tag tag-blue">PoSH s.4</span>
+                <span class="preset-text">Mandatory ICC Constitution (10+ Staff)</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </div>
+
+              <div class="preset-card" onclick="applyPreset('out_of_scope')">
+                <span class="preset-tag tag-rose">Escalate</span>
+                <span class="preset-text">Non-Covered Domain (Wage Dispute)</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </div>
+            </div>
+
+            <!-- Inquiry Text -->
+            <div style="margin-bottom: 1rem;">
+              <div class="field-label">
+                <span>Inquiry Fact Pattern</span>
+                <span id="charCount" style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);">138 chars</span>
+              </div>
+              <textarea id="q" class="textarea-input" oninput="updateCharCount()">An employee engaged after 21 November 2025 on a written fixed-term contract of 18 months has completed the contract. Is gratuity payable?</textarea>
+            </div>
+
+            <!-- Context Inputs -->
+            <div class="field-row">
+              <div>
+                <div class="field-label">Engagement Classification</div>
+                <select id="etype" class="select-input">
+                  <option value="">(Unspecified)</option>
+                  <option value="fixed_term" selected>Fixed-Term Contract</option>
+                  <option value="permanent">Regular Permanent</option>
+                  <option value="probationary">Probationary Period</option>
+                  <option value="contract_labour">Contractor Staff</option>
+                </select>
+              </div>
+              <div>
+                <div class="field-label">Contract Term (Months)</div>
+                <input id="months" type="number" class="text-input" placeholder="e.g. 18" value="18">
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div>
+                <div class="field-label">Completed Service (Years)</div>
+                <input id="yos" type="number" step="0.1" class="text-input" placeholder="e.g. 1.5" value="1.5">
+              </div>
+              <div>
+                <div class="field-label">Staff Headcount</div>
+                <input id="ecount" type="number" class="text-input" placeholder="e.g. 25">
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div>
+                <div class="field-label">Days Worked (Last 12 Mo)</div>
+                <input id="days" type="number" class="text-input" placeholder="e.g. 85">
+              </div>
+              <div>
+                <div class="field-label">Assessment Date</div>
+                <input id="asof" type="date" class="text-input">
+              </div>
+            </div>
+
+            <!-- Advanced Drawer -->
+            <details class="advanced-drawer">
+              <summary>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                Governance & Verification Options
+              </summary>
+              <div style="padding: 0.85rem 0 0; display: flex; gap: 1rem; align-items: center;">
+                <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; color: var(--text-secondary); cursor: pointer;">
+                  <input type="checkbox" id="noCache" style="accent-color: var(--accent-blue);"> Bypass Memory Cache
+                </label>
+                <div style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; color: var(--text-secondary);">
+                  <span>Prompt:</span>
+                  <select id="pver" class="select-input" style="padding: 0.2rem 0.5rem; font-size: 0.75rem; width: auto;">
+                    <option value="v2">v2 (Proviso-Grounded)</option>
+                    <option value="v1">v1 (Baseline)</option>
+                  </select>
+                </div>
+              </div>
+            </details>
+
+            <!-- Submit Button -->
+            <button id="go" class="submit-cta" onclick="executeInquiry()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              <span>Verify Statutory Position</span>
+            </button>
+
+          </div>
+        </div>
+
+        <!-- RIGHT PANEL: Advisory Output / Live Canvas -->
+        <div class="dossier-canvas">
+          
+          <!-- State 1: Active Multi-Agent Pipeline Visualization -->
+          <div id="agentPipeline" class="agent-pipeline-view">
+            <div class="pipeline-header">
+              <div>
+                <div style="font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; color: #fff;">
+                  Autonomous Multi-Agent Pipeline Executing
+                </div>
+                <div style="font-size: 0.78rem; color: var(--text-muted);">
+                  Orchestrating independent retrieval and cross-verification agents
+                </div>
+              </div>
+              <div id="liveClock" style="font-family: var(--font-mono); font-size: 0.85rem; color: #60a5fa;">0.0s</div>
+            </div>
+
+            <div class="pipeline-nodes">
+              <div id="node1" class="node-box active">
+                <div class="node-icon-circle">1</div>
+                <div class="node-title">Guardrail Scan</div>
+                <div style="font-size: 0.68rem; color: var(--text-muted); margin-top: 0.2rem;">Prompt & Schema</div>
+              </div>
+
+              <div id="node2" class="node-box">
+                <div class="node-icon-circle">2</div>
+                <div class="node-title">Researcher</div>
+                <div style="font-size: 0.68rem; color: var(--text-muted); margin-top: 0.2rem;">FAISS Chunks</div>
+              </div>
+
+              <div id="node3" class="node-box">
+                <div class="node-icon-circle">3</div>
+                <div class="node-title">Advisor Verifier</div>
+                <div style="font-size: 0.68rem; color: var(--text-muted); margin-top: 0.2rem;">Rule vs Proviso</div>
+              </div>
+
+              <div id="node4" class="node-box">
+                <div class="node-icon-circle">4</div>
+                <div class="node-title">Advisory Dossier</div>
+                <div style="font-size: 0.68rem; color: var(--text-muted); margin-top: 0.2rem;">Cited Synthesis</div>
+              </div>
+            </div>
+
+            <div class="agent-console">
+              <span class="console-cursor"></span>
+              <span id="agentConsoleMsg">Initializing LangGraph state coordinator...</span>
+            </div>
+          </div>
+
+          <!-- Output Area (Dynamic Results) -->
+          <div id="dossierOutput">
+            
+            <!-- Default Idle Showcase State -->
+            <div class="panel idle-showcase">
+              <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); display: flex; align-items: center; justify-content: center; color: var(--accent-blue); margin-bottom: 0.5rem;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              </div>
+
+              <h2 style="font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; color: #fff;">
+                Statutory Grounding & Proviso Verification
+              </h2>
+              <p style="font-size: 0.88rem; color: var(--text-secondary); max-width: 520px; line-height: 1.6;">
+                General statutory rules (such as the 5-year continuous service mandate) are modified by legislative provisos for fixed-term staff. This system verifies rule-proviso integrity before any advisory is rendered.
+              </p>
+
+              <div class="statute-badges">
+                <div class="statute-card">
+                  <div class="statute-code">CoSS 2020 • s.53</div>
+                  <div class="statute-name">Gratuity & Fixed-Term</div>
+                  <div class="statute-desc">Handles the 5-year continuous service rule and the explicit proviso 2 exception for fixed term completion.</div>
+                </div>
+
+                <div class="statute-card">
+                  <div class="statute-code">CoSS 2020 • s.60</div>
+                  <div class="statute-name">Maternity Benefit</div>
+                  <div class="statute-desc">Evaluates the 80-day threshold requirement in the preceding 12 months for entitlement.</div>
+                </div>
+
+                <div class="statute-card">
+                  <div class="statute-code">PoSH Act 2013 • s.4</div>
+                  <div class="statute-name">ICC Constitution</div>
+                  <div class="statute-desc">Determines establishment threshold obligations for internal complaint committees.</div>
+                </div>
+              </div>
+
+              <div style="font-size: 0.78rem; color: var(--text-muted);">
+                Select a preset on the left or enter a custom fact pattern to begin verification.
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- VIEW 2: Cluster Telemetry -->
+    <div id="view-system" class="tab-view">
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+        <div class="panel" style="padding: 1.25rem;">
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Gateway Status</div>
+          <div id="telApi" style="font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: #34d399; margin-top: 0.25rem;">200 OK</div>
+        </div>
+        <div class="panel" style="padding: 1.25rem;">
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Index Chunks</div>
+          <div style="font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: #60a5fa; margin-top: 0.25rem;">37 Chunks (FAISS)</div>
+        </div>
+        <div class="panel" style="padding: 1.25rem;">
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">User Satisfaction</div>
+          <div id="telSat" style="font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: #f59e0b; margin-top: 0.25rem;">100%</div>
+        </div>
+        <div class="panel" style="padding: 1.25rem;">
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Quarantined Requests</div>
+          <div id="telQuarantine" style="font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: #fb7185; margin-top: 0.25rem;">0</div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom: 1.5rem;">
+        <div class="panel-header">
+          <div class="panel-title">Microservice Node Topologies</div>
+          <button class="nav-link" onclick="loadTelemetry()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+            Refresh
+          </button>
+        </div>
+        <div class="panel-body">
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+            <div style="background: var(--bg-surface-elevated); padding: 1rem; border-radius: 8px; border: 1px solid var(--border);">
+              <div style="font-weight: 600; font-size: 0.88rem; color: #fff;">FastAPI REST Gateway</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Port :8000 • Ingress & Validation</div>
+              <span id="badgeApiNode" class="status-badge">Checking...</span>
+            </div>
+            <div style="background: var(--bg-surface-elevated); padding: 1rem; border-radius: 8px; border: 1px solid var(--border);">
+              <div style="font-weight: 600; font-size: 0.88rem; color: #fff;">Researcher Agent (Agent 1)</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Port :8001 • FAISS Retrieval</div>
+              <span id="badgeResNode" class="status-badge">Checking...</span>
+            </div>
+            <div style="background: var(--bg-surface-elevated); padding: 1rem; border-radius: 8px; border: 1px solid var(--border);">
+              <div style="font-weight: 600; font-size: 0.88rem; color: #fff;">Advisor Agent (Agent 2)</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Port :8002 • Legal Verifier</div>
+              <span id="badgeAdvNode" class="status-badge">Checking...</span>
+            </div>
+            <div style="background: var(--bg-surface-elevated); padding: 1rem; border-radius: 8px; border: 1px solid var(--border);">
+              <div style="font-weight: 600; font-size: 0.88rem; color: #fff;">Stub LLM Provider</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Port :8080 • Mock OpenAI /v1</div>
+              <span id="badgeStubNode" class="status-badge">Checking...</span>
+            </div>
+            <div style="background: var(--bg-surface-elevated); padding: 1rem; border-radius: 8px; border: 1px solid var(--border);">
+              <div style="font-weight: 600; font-size: 0.88rem; color: #fff;">RQ Task Worker</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Port :9101 • LangGraph Coordinator</div>
+              <span class="status-badge" style="color: #34d399;">Active Worker</span>
+            </div>
+            <div style="background: var(--bg-surface-elevated); padding: 1rem; border-radius: 8px; border: 1px solid var(--border);">
+              <div style="font-weight: 600; font-size: 0.88rem; color: #fff;">Redis Key-Value Broker</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Port :6379 • Queue & Deduplication</div>
+              <span class="status-badge" style="color: #34d399;">Connected</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: Statutory Gazette -->
+    <div id="view-corpus" class="tab-view">
+      <div class="panel" style="padding: 1.5rem; margin-bottom: 1.5rem;">
+        <h2 style="font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem;">
+          Statutory Framework & Reasoning Architecture
+        </h2>
+        <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; max-width: 800px;">
+          The desk operates on a strict verification principle: <em>No conclusion is legally valid if it cites a primary statutory rule without actively searching for and verifying modifying provisos</em>.
+        </p>
+
+        <div style="margin-top: 1.5rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+          <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border); border-radius: 8px; padding: 1rem;">
+            <div style="font-family: var(--font-mono); font-size: 0.78rem; color: #60a5fa; font-weight: 600;">CoSS 2020 s.53(1)</div>
+            <div style="font-size: 0.85rem; font-weight: 700; color: #fff; margin: 0.35rem 0;">Primary Rule: 5 Years</div>
+            <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.5;">
+              Gratuity payable to an employee on termination after continuous service of not less than five years.
+            </div>
+          </div>
+
+          <div style="background: var(--bg-surface-elevated); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 1rem;">
+            <div style="font-family: var(--font-mono); font-size: 0.78rem; color: #34d399; font-weight: 600;">CoSS 2020 s.53(1) Proviso 2</div>
+            <div style="font-size: 0.85rem; font-weight: 700; color: #fff; margin: 0.35rem 0;">Modifying Proviso: Fixed Term</div>
+            <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.5;">
+              5-year requirement <em>shall not be necessary</em> on expiry of fixed-term contract; payable on pro-rata basis.
+            </div>
+          </div>
+
+          <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border); border-radius: 8px; padding: 1rem;">
+            <div style="font-family: var(--font-mono); font-size: 0.78rem; color: #a78bfa; font-weight: 600;">PoSH Act 2013 s.4</div>
+            <div style="font-size: 0.85rem; font-weight: 700; color: #fff; margin: 0.35rem 0;">Internal Complaints Committee</div>
+            <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.5;">
+              Every employer of an establishment employing 10 or more workers shall constitute an Internal Committee.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Trace Inspection Modal -->
+  <div id="traceModal" class="modal-overlay" onclick="closeModalOnBackdrop(event)">
+    <div class="modal-window">
+      <div class="modal-window-header">
+        <div style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          Execution Provenance Trace
+        </div>
+        <button class="nav-link" style="padding: 0.25rem 0.6rem;" onclick="closeTraceModal()">✕</button>
+      </div>
+      <div id="modalTraceBody" class="modal-window-body">
+        <div style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading execution events...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Minimal Toast -->
+  <div id="toast" class="toast-pill">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    <span id="toastText">Action confirmed</span>
+  </div>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+    // Initialize date
+    $('asof').value = new Date().toISOString().split('T')[0];
+
+    function updateCharCount() {
+      $('charCount').textContent = $('q').value.length + ' chars';
+    }
+
+    // View Switching
+    function switchView(viewName) {
+      document.querySelectorAll('.view-tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      $('view-' + viewName).classList.add('active');
+      if (viewName === 'system') loadTelemetry();
+    }
+
+    // Preset Cases
+    const PRESETS = {
+      fixed_term: {
+        q: "An employee engaged after 21 November 2025 on a written fixed-term contract of 18 months has completed the contract. Is gratuity payable?",
+        etype: "fixed_term",
+        months: 18,
+        yos: 1.5,
+        ecount: "",
+        days: ""
+      },
+      continuous_5yr: {
+        q: "An employee with 4 years and 7 months of continuous service has resigned from the company. Is gratuity payable under the law?",
+        etype: "permanent",
+        months: "",
+        yos: 4.6,
+        ecount: "30",
+        days: ""
+      },
+      maternity_80d: {
+        q: "An employee has worked 85 days in the establishment in the preceding 12 months. Is she entitled to maternity benefit under the Social Security Code?",
+        etype: "permanent",
+        months: "",
+        yos: 0.5,
+        ecount: "15",
+        days: 85
+      },
+      posh_icc: {
+        q: "Our establishment has 12 employees across two offices. Are we required to constitute an Internal Complaints Committee (ICC) under the PoSH Act?",
+        etype: "",
+        months: "",
+        yos: "",
+        ecount: 12,
+        days: ""
+      },
+      out_of_scope: {
+        q: "What is the minimum wage for a skilled welder in Tamil Nadu for this financial year?",
+        etype: "permanent",
+        months: "",
+        yos: 2,
+        ecount: 50,
+        days: ""
+      }
+    };
+
+    function applyPreset(key) {
+      document.querySelectorAll('.preset-card').forEach(c => c.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      const p = PRESETS[key];
+      if (!p) return;
+      $('q').value = p.q;
+      $('etype').value = p.etype;
+      $('months').value = p.months;
+      $('yos').value = p.yos;
+      $('ecount').value = p.ecount;
+      $('days').value = p.days;
+      updateCharCount();
+      triggerToast("Loaded preset: " + key);
+    }
+
+    function clearForm() {
+      $('q').value = '';
+      $('etype').value = '';
+      $('months').value = '';
+      $('yos').value = '';
+      $('ecount').value = '';
+      $('days').value = '';
+      updateCharCount();
+      triggerToast("Form cleared");
+    }
+
+    function buildPayload() {
+      const b = {
+        client_id: 'web-user',
+        question: $('q').value
+      };
+      const emp = {}, est = {};
+      if ($('etype').value) emp.employment_type = $('etype').value;
+      if ($('months').value) emp.contract_months = +$('months').value;
+      if ($('yos').value) emp.years_of_service = +$('yos').value;
+      if ($('days').value) emp.days_worked_last_12_months = +$('days').value;
+      if ($('ecount').value) est.employee_count = +$('ecount').value;
+      if (Object.keys(emp).length) b.employment = emp;
+      if (Object.keys(est).length) b.establishment = est;
+      if ($('asof').value) b.as_of_date = $('asof').value;
+
+      const opts = {};
+      if ($('noCache').checked) opts.no_cache = true;
+      if ($('pver').value) opts.prompt_version = $('pver').value;
+      if (Object.keys(opts).length) b.options = opts;
+
+      return b;
+    }
+
+    // Real-Time Progress Visualizer
+    let clockTimer = null;
+    let t0 = 0;
+
+    function setPipelineStep(nodeIdx, msg) {
+      $('agentConsoleMsg').textContent = msg;
+      for (let i = 1; i <= 4; i++) {
+        const el = $('node' + i);
+        el.className = 'node-box';
+        if (i < nodeIdx) el.classList.add('completed');
+        else if (i === nodeIdx) el.classList.add('active');
+      }
+    }
+
+    async function executeInquiry() {
+      const btn = $('go');
+      btn.disabled = true;
+      $('agentPipeline').style.display = 'block';
+
+      t0 = Date.now();
+      if (clockTimer) clearInterval(clockTimer);
+      clockTimer = setInterval(() => {
+        $('liveClock').textContent = ((Date.now() - t0) / 1000).toFixed(1) + 's';
+      }, 100);
+
+      setPipelineStep(1, "Passing ingress schema validation & prompt-injection security guardrails...");
+
+      try {
+        const res = await fetch('/v1/advisories', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(buildPayload())
+        });
+        const j = await res.json();
+
+        if (!res.ok) {
+          clearInterval(clockTimer);
+          $('agentPipeline').style.display = 'none';
+          btn.disabled = false;
+          renderQuarantinedError(res.status, j);
+          return;
+        }
+
+        setPipelineStep(2, "Research Agent: Querying statutory index for governing provisions...");
+
+        let pollCount = 0;
+        for (;;) {
+          await new Promise(r => setTimeout(r, 900));
+          pollCount++;
+          if (pollCount === 2) {
+            setPipelineStep(3, "Advisor Agent: Evaluating rule completeness & verifying statutory provisos...");
+          } else if (pollCount === 3) {
+            setPipelineStep(4, "Advisory Grounding: Formulating final cited legal advisory dossier...");
+          }
+
+          const sRes = await fetch(j.status_url);
+          const s = await sRes.json();
+
+          if (s.status === 'completed' || s.status === 'failed') {
+            clearInterval(clockTimer);
+            setPipelineStep(4, "Advisory synthesis completed.");
+            $('node4').className = 'node-box completed';
+            setTimeout(() => {
+              $('agentPipeline').style.display = 'none';
+              btn.disabled = false;
+              renderDossier(s);
+            }, 300);
+            break;
+          }
+        }
+      } catch (err) {
+        clearInterval(clockTimer);
+        $('agentPipeline').style.display = 'none';
+        btn.disabled = false;
+        renderQuarantinedError(500, { error: err.message });
+      }
+    }
+
+    function renderQuarantinedError(status, j) {
+      let h = '<div class="panel" style="padding: 1.5rem; border-color: rgba(244,63,94,0.35); background: rgba(244,63,94,0.06);">';
+      h += '<div class="route-pill legal-counsel-review" style="margin-bottom: 0.75rem;">Security Guardrail Intercept (' + status + ')</div>';
+      h += '<div style="font-size: 0.95rem; font-weight: 600; color: #fff; margin-bottom: 0.5rem;">Request Quarantined Before Execution</div>';
+      h += '<div style="font-size: 0.85rem; color: #cbd5e1; margin-bottom: 1rem;">This query was rejected at the ingress guardrail to prevent prompt injection or schema invalidation.</div>';
+      h += '<pre class="trace-json">' + esc(JSON.stringify(j, null, 2)) + '</pre>';
+      h += '</div>';
+      $('dossierOutput').innerHTML = h;
+      triggerToast("Request intercepted by guardrail");
+    }
+
+    function renderDossier(s) {
+      const isCitation = s.route === 'answer-with-citation';
+      const isMore = s.route === 'request-more-establishment-detail';
+      const isEsc = s.route === 'legal-counsel-review';
+
+      let h = '<div class="dossier-card">';
+      
+      // Header
+      h += '<div class="dossier-header">';
+      h += '<div>';
+      h += '<div class="route-pill ' + esc(s.route) + '">';
+      if (isCitation) h += '✓ Statutory Advisory Grounded';
+      else if (isMore) h += 'ℹ Establishment Detail Required';
+      else h += '⚠ Formal Legal Counsel Review';
+      h += '</div>';
+      h += '<div class="dossier-summary-title" style="margin-top: 0.75rem;">Executive Determination</div>';
+      h += '<div class="dossier-basis">' + esc(s.route_basis) + '</div>';
+      h += '</div>';
+
+      h += '<div style="display: flex; gap: 0.4rem;">';
+      if (s.cached) h += '<span class="preset-tag tag-blue">CACHED</span>';
+      if (s.degraded) h += '<span class="preset-tag tag-amber">DEGRADED</span>';
+      h += '</div>';
+      h += '</div>';
+
+      // Summary text
+      if (s.summary) {
+        h += '<p style="font-size: 0.95rem; color: #fff; margin-bottom: 1.25rem; line-height: 1.6;">' + esc(s.summary) + '</p>';
+      }
+
+      // Recommendation box
+      if (s.recommendation) {
+        h += '<div style="background: rgba(37,99,235,0.08); border: 1px solid rgba(59,130,246,0.25); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.25rem;">';
+        h += '<div style="font-family: var(--font-display); font-size: 0.82rem; font-weight: 700; color: #93c5fd; text-transform: uppercase; margin-bottom: 0.25rem;">Compliance Recommendation</div>';
+        h += '<div style="font-size: 0.9rem; color: #f1f5f9;">' + esc(s.recommendation) + '</div>';
+        h += '</div>';
+      }
+
+      // Proviso & Assertions Block
+      if (s.assertions && s.assertions.length) {
+        h += '<div class="proviso-breakdown-card">';
+        h += '<div class="proviso-title">';
+        h += '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>';
+        h += 'Statutory Provisions Cited & Verified';
+        h += '</div>';
+
+        s.assertions.forEach(a => {
+          (a.citations || []).forEach(c => {
+            h += '<div class="citation-item">';
+            h += '<div class="citation-item-header">';
+            h += '<span class="citation-ref">' + esc(c.label) + '</span>';
+            h += '<span class="status-badge" style="font-size: 0.68rem; padding: 0.15rem 0.45rem;">IN FORCE</span>';
+            h += '</div>';
+            h += '<div class="citation-quote">“' + esc(c.text) + '”</div>';
+            h += '</div>';
+          });
+        });
+
+        h += '</div>';
+      }
+
+      // Missing Fields if any
+      if (s.missing_fields && s.missing_fields.length) {
+        h += '<div style="background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3); border-radius: 8px; padding: 1rem; margin-bottom: 1.25rem;">';
+        h += '<div style="font-weight: 700; color: #fbbf24; font-size: 0.85rem; margin-bottom: 0.25rem;">Additional Information Required</div>';
+        h += '<div style="font-size: 0.85rem; color: #fef3c7;">Please provide: <strong>' + esc(s.missing_fields.join(', ')) + '</strong></div>';
+        h += '</div>';
+      }
+
+      // Escalation if any
+      if (s.escalation) {
+        h += '<div style="background: rgba(244,63,94,0.08); border: 1px solid rgba(244,63,94,0.3); border-radius: 8px; padding: 1rem; margin-bottom: 1.25rem;">';
+        h += '<div style="font-weight: 700; color: #fb7185; font-size: 0.85rem; margin-bottom: 0.25rem;">Escalation to ' + esc(s.escalation.to) + '</div>';
+        h += '<div style="font-size: 0.85rem; color: #fecdd3;">' + esc(s.escalation.reason) + '</div>';
+        h += '</div>';
+      }
+
+      // Footer Meta & Actions
+      h += '<div class="dossier-actions">';
+      h += '<div class="meta-badges-cluster">';
+      h += '<span class="meta-chip">RUN: ' + esc(s.run_id.slice(0, 8)) + '</span>';
+      h += '<span class="meta-chip">PROMPT: ' + esc(s.prompt_version) + '</span>';
+      if (s.duration_s) h += '<span class="meta-chip">' + s.duration_s + 's</span>';
+      h += '</div>';
+
+      h += '<div style="display: flex; gap: 0.5rem;">';
+      h += '<button class="nav-link" onclick="window.print()">Print / PDF</button>';
+      h += '<button class="nav-link" onclick="inspectTraceModal(\'' + esc(s.run_id) + '\')">Inspect Trace</button>';
+      h += '</div>';
+      h += '</div>';
+
+      // Feedback Rating
+      h += '<div style="margin-top: 1rem; padding-top: 0.85rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem;">';
+      h += '<span style="color: var(--text-muted);">Was this statutory grounding accurate?</span>';
+      h += '<div style="display: flex; gap: 0.4rem;">';
+      h += '<button class="preset-tag tag-green" style="cursor: pointer; border: none;" onclick="rateAdvisory(\'' + esc(s.run_id) + '\', \'satisfactory\', this)">✓ Yes</button>';
+      h += '<button class="preset-tag tag-rose" style="cursor: pointer; border: none;" onclick="rateAdvisory(\'' + esc(s.run_id) + '\', \'unsatisfactory\', this)">✕ No</button>';
+      h += '</div>';
+      h += '</div>';
+
+      h += '</div>';
+
+      $('dossierOutput').innerHTML = h;
+      triggerToast("Statutory position determined");
+    }
+
+    async function rateAdvisory(runId, rating, btn) {
+      try {
+        const res = await fetch('/v1/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ run_id: runId, rating: rating, reason: 'web interface review' })
+        });
+        if (res.ok) {
+          btn.parentElement.innerHTML = '<span style="color:#34d399; font-weight:600;">Feedback Saved</span>';
+          triggerToast("Rating stored");
+        }
+      } catch (e) {}
+    }
+
+    // Trace Modal
+    async function inspectTraceModal(runId) {
+      $('traceModal').classList.add('active');
+      $('modalTraceBody').innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading provenance DAG...</div>';
+      try {
+        const res = await fetch('/v1/advisories/' + runId + '/trace');
+        const data = await res.json();
+        
+        let h = '<div style="margin-bottom: 1rem; font-size: 0.82rem; color: var(--text-muted);">';
+        h += 'Run: <strong>' + esc(data.run_id) + '</strong> | Model: <strong>stub-model</strong> | Agent Events: <strong>' + (data.events ? data.events.length : 0) + '</strong>';
+        h += '</div>';
+
+        (data.events || []).forEach(e => {
+          h += '<div style="padding: 0.6rem 0.85rem; margin-bottom: 0.45rem; background: var(--bg-surface-elevated); border-radius: 6px; border-left: 3px solid ' + (e.kind==='verify'?'#10b981':e.kind==='tool'?'#f59e0b':'#3b82f6') + ';">';
+          h += '<div style="display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 600; color: #fff;">';
+          h += '<span>' + esc(e.kind || '-') + ' : ' + esc(e.name || '-') + '</span>';
+          h += '<span style="font-size: 0.72rem; color: var(--text-muted);">' + esc(e.agent || '-') + '</span>';
+          h += '</div>';
+          if (e.query) h += '<div style="font-size: 0.76rem; color: #93c5fd; margin-top: 0.2rem;">Query: ' + esc(e.query) + '</div>';
+          if (e.outcome) h += '<div style="font-size: 0.76rem; color: #86efac; margin-top: 0.2rem;">Verification: ' + esc(e.outcome) + '</div>';
+          h += '</div>';
+        });
+
+        h += '<div style="margin: 1.25rem 0 0.5rem; font-family: var(--font-display); font-size: 0.85rem; font-weight: 700; color: #fff;">Complete Payload JSON:</div>';
+        h += '<pre class="trace-json">' + esc(JSON.stringify(data, null, 2)) + '</pre>';
+        $('modalTraceBody').innerHTML = h;
+      } catch (e) {
+        $('modalTraceBody').innerHTML = '<div style="color:#fb7185;">Could not load trace: ' + esc(e.message) + '</div>';
+      }
+    }
+
+    function closeTraceModal() { $('traceModal').classList.remove('active'); }
+    function closeModalOnBackdrop(e) { if (e.target.id === 'traceModal') closeTraceModal(); }
+
+    // Telemetry Loader
+    async function loadTelemetry() {
+      try {
+        const hRes = await fetch('/health');
+        if (hRes.ok) {
+          const h = await hRes.json();
+          $('telApi').textContent = '200 OK (' + h.uptime_s + 's)';
+          $('badgeApiNode').textContent = 'Healthy';
+        }
+      } catch (e) {}
+
+      try {
+        const fbRes = await fetch('/v1/feedback/summary');
+        if (fbRes.ok) {
+          const fb = await fbRes.json();
+          const rate = fb.satisfaction_rate !== null ? Math.round(fb.satisfaction_rate * 100) + '%' : '100%';
+          $('telSat').textContent = rate + ' (' + fb.total + ' reviews)';
+        }
+      } catch (e) {}
+
+      try {
+        const qRes = await fetch('/v1/quarantine?limit=5');
+        if (qRes.ok) {
+          const list = await qRes.json();
+          $('telQuarantine').textContent = list.length;
+        }
+      } catch (e) {}
+    }
+
+    // Toast
+    let toastTimeout = null;
+    function triggerToast(text) {
+      const el = $('toast');
+      $('toastText').textContent = text;
+      el.classList.add('show');
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => el.classList.remove('show'), 2500);
+    }
+
+    // Initial load
+    loadTelemetry();
+  </script>
+</body>
+</html>

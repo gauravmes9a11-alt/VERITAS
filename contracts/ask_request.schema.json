@@ -1,0 +1,286 @@
+{
+  "$defs": {
+    "Employment": {
+      "additionalProperties": false,
+      "properties": {
+        "employment_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EmploymentType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "start_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start Date"
+        },
+        "end_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Date"
+        },
+        "contract_months": {
+          "anyOf": [
+            {
+              "maximum": 600,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Contract Months"
+        },
+        "years_of_service": {
+          "anyOf": [
+            {
+              "maximum": 60.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Years Of Service"
+        },
+        "days_worked_last_12_months": {
+          "anyOf": [
+            {
+              "maximum": 366,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Days Worked Last 12 Months"
+        },
+        "separation_reason": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SeparationReason"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "Employment",
+      "type": "object"
+    },
+    "EmploymentType": {
+      "enum": [
+        "permanent",
+        "fixed_term",
+        "probationary",
+        "contract_labour"
+      ],
+      "title": "EmploymentType",
+      "type": "string"
+    },
+    "Establishment": {
+      "additionalProperties": false,
+      "properties": {
+        "employee_count": {
+          "anyOf": [
+            {
+              "maximum": 1000000,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Employees in the establishment",
+          "title": "Employee Count"
+        },
+        "establishment_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EstablishmentType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_internal_committee": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Has Internal Committee"
+        }
+      },
+      "title": "Establishment",
+      "type": "object"
+    },
+    "EstablishmentType": {
+      "enum": [
+        "factory",
+        "shop_establishment",
+        "it_services",
+        "mine",
+        "plantation",
+        "other"
+      ],
+      "title": "EstablishmentType",
+      "type": "string"
+    },
+    "Options": {
+      "additionalProperties": false,
+      "properties": {
+        "no_cache": {
+          "default": false,
+          "title": "No Cache",
+          "type": "boolean"
+        },
+        "prompt_version": {
+          "anyOf": [
+            {
+              "pattern": "^v\\d{1,2}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prompt Version"
+        }
+      },
+      "title": "Options",
+      "type": "object"
+    },
+    "SeparationReason": {
+      "enum": [
+        "ongoing",
+        "contract_expiry",
+        "resignation",
+        "retirement",
+        "superannuation",
+        "death",
+        "disablement",
+        "termination"
+      ],
+      "title": "SeparationReason",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "client_id": {
+      "pattern": "^[a-z0-9_-]{3,64}$",
+      "title": "Client Id",
+      "type": "string"
+    },
+    "question": {
+      "maxLength": 2000,
+      "minLength": 10,
+      "title": "Question",
+      "type": "string"
+    },
+    "establishment": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Establishment"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "employment": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Employment"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "as_of_date": {
+      "anyOf": [
+        {
+          "format": "date",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "As Of Date"
+    },
+    "notes": {
+      "anyOf": [
+        {
+          "maxLength": 500,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Notes"
+    },
+    "options": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Options"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "client_id",
+    "question"
+  ],
+  "title": "AskRequest",
+  "type": "object"
+}

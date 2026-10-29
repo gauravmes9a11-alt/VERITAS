@@ -1,0 +1,44 @@
+# Corpus manifest. For each document the indexer prefers the official file in
+# corpus/data/ (download it, see corpus/README.md) and falls back to the
+# SYNTHETIC dev fixture in corpus/samples/ so the stack starts from a clean clone.
+# Fixtures are paraphrased approximations, NOT the official text. The index
+# manifest records source_kind per document and /health reports it.
+documents:
+  - doc_id: coss_2020
+    statute: "Code on Social Security, 2020"
+    short: "CoSS 2020"
+    official_file: data/code_on_social_security_2020.pdf
+    fixture_file: samples/coss_2020.txt
+    status: in_force
+    in_force_from: "2025-11-21"
+    in_force_until: null
+    supersedes: [payment_of_gratuity_1972]
+    version: "Act 36 of 2020; Labour Codes commenced 21 Nov 2025"
+  - doc_id: posh_2013
+    statute: "Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013"
+    short: "POSH Act 2013"
+    official_file: data/posh_act_2013.pdf
+    fixture_file: samples/posh_2013.txt
+    status: in_force
+    in_force_from: "2013-12-09"
+    in_force_until: null
+    version: "Act 14 of 2013"
+  - doc_id: payment_of_gratuity_1972
+    statute: "Payment of Gratuity Act, 1972 (REPEALED)"
+    short: "Gratuity Act 1972 (repealed)"
+    official_file: data/payment_of_gratuity_act_1972.pdf
+    fixture_file: samples/payment_of_gratuity_1972.txt
+    status: repealed
+    in_force_from: "1972-09-21"
+    in_force_until: "2025-11-20"
+    superseded_by: coss_2020
+    version: "Act 39 of 1972, repealed on commencement of the Code on Social Security"
+  - doc_id: labour_codes_commencement
+    statute: "Notification bringing the Labour Codes into force"
+    short: "Commencement notification"
+    official_file: data/commencement_notification.pdf
+    fixture_file: samples/commencement_notification.txt
+    status: in_force
+    in_force_from: "2025-11-21"
+    in_force_until: null
+    version: "Ministry of Labour and Employment notification"

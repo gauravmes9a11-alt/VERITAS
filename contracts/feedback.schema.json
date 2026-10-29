@@ -1,0 +1,29 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "run_id": {
+      "maxLength": 64,
+      "minLength": 8,
+      "title": "Run Id",
+      "type": "string"
+    },
+    "rating": {
+      "pattern": "^(satisfactory|unsatisfactory)$",
+      "title": "Rating",
+      "type": "string"
+    },
+    "reason": {
+      "maxLength": 500,
+      "minLength": 3,
+      "title": "Reason",
+      "type": "string"
+    }
+  },
+  "required": [
+    "run_id",
+    "rating",
+    "reason"
+  ],
+  "title": "FeedbackIn",
+  "type": "object"
+}

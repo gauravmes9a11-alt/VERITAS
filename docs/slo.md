@@ -1,0 +1,9 @@
+# Service level objective (D6)
+
+**Declared before any measurement** (committed with `loadtest/slo.json`; see git history for the timestamp).
+
+* **SLO:** p95 of a complete run, measured from `POST /v1/advisories` to `status=completed`, **≤ 30 s** at **10 concurrent users** (think time 1-3 s), success rate ≥ 99 %, on the default deployment (1 worker), with the stub provider at 1.5 s ± 0.4 s per call.
+* **Justification (brief section 1):** the desk replaces an HR person looking up statutes by hand (minutes) and sits in front of a legal-exposure decision. Users tolerate tens of seconds when each answer is correct and cited; they will not tolerate a wrong fast answer. A normal run is ~5 model calls (3 researcher decisions + finish + compose), so ≈ 8 s of pure model time at the stub delay; real providers at 2-6 s per call give ≈ 10-30 s. 30 s keeps one verification retry inside the objective. Sub-second targets would be unrealistic and would pressure the system to skip verification.
+* **Measurement:** `loadtest/locustfile.py` records the whole run as `end_to_end_run`; the LLM is the stub (`stub-llm`); `options.no_cache=true` bypasses the whole-run cache. `loadtest/report.py` compares CSV output with `slo.json`.
+* **Hypotheses to test (not results):** with 1 worker the system is worker-bound: each RQ worker executes one run at a time and a run is dominated by I/O wait on the stub, so p95 should grow with users at ~(runs ahead in queue) × run time; `--scale worker=3` should raise throughput near-linearly until the next bottleneck (the researcher's thread pool / embedding CPU, then Redis). If scaling does not help, inspect per-container CPU in Grafana and `desk_step_duration_seconds` to name the real bottleneck.
+* **Results:** fill from `results/lt_w{1,3}_u*_stats.csv` into `docs/report.md` (RPS, p50, p95, met/not met, failing concurrency, responsible component).

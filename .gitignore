@@ -1,0 +1,17 @@
+.env
+__pycache__/
+*.pyc
+logs/
+*.log
+dump.rdb
+data/index/
+index_data/
+corpus/data/*
+!corpus/data/.gitkeep
+results/
+.pytest_cache/
+.vscode/
+.idea/
+.DS_Store
+~$*
+*.tmp

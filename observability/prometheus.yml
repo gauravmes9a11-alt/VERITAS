@@ -1,0 +1,17 @@
+global: {scrape_interval: 5s, evaluation_interval: 5s}
+scrape_configs:
+  # dns_sd returns every replica's IP, so `--scale worker=3` is scraped automatically
+  - job_name: api
+    dns_sd_configs: [{names: [api], type: A, port: 8000}]
+  - job_name: researcher
+    dns_sd_configs: [{names: [researcher], type: A, port: 8001}]
+  - job_name: advisor
+    dns_sd_configs: [{names: [advisor], type: A, port: 8002}]
+  - job_name: worker
+    dns_sd_configs: [{names: [worker], type: A, port: 9101}]
+  - job_name: stub-llm
+    static_configs: [{targets: ["stub-llm:8080"]}]
+  - job_name: cadvisor
+    static_configs: [{targets: ["cadvisor:8080"]}]
+  - job_name: prometheus
+    static_configs: [{targets: ["localhost:9090"]}]
