@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ENV PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app \
     DISABLE_SQLALCHEMY_CEXT=1 \
-    PORT=8000
+    PORT=10000
 
 WORKDIR /app
 
@@ -24,6 +24,6 @@ COPY . .
 # Setup entrypoint script
 RUN chmod +x ./scripts/start_cloud.sh
 
-EXPOSE 8000
+EXPOSE 10000
 
 CMD ["./scripts/start_cloud.sh"]

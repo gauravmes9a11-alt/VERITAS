@@ -108,11 +108,12 @@ def ensure_index():
         print("[+] Existing index found at", INDEX_ROOT)
 
 
-def check_url(url, timeout=2.0):
+def check_url(url, timeout=3.0):
     try:
         import urllib.request
-        response = urllib.request.urlopen(url, timeout=timeout)
-        return response.status == 200
+        req = urllib.request.Request(url, headers={"User-Agent": "VERITAS-HealthCheck/1.0"})
+        with urllib.request.urlopen(req, timeout=timeout) as response:
+            return response.status == 200
     except Exception:
         return False
 
@@ -217,8 +218,9 @@ def main():
 
     start_time = time.time()
     all_ready = False
+    HEALTH_TIMEOUT = int(os.environ.get("HEALTH_TIMEOUT", "90"))
 
-    while time.time() - start_time < 30:
+    while time.time() - start_time < HEALTH_TIMEOUT:
         ready = []
 
         for name, process, health_url in processes:
@@ -228,7 +230,13 @@ def main():
                     f"[-] Service {name} exited with "
                     f"code {process.returncode}!"
                 )
-                print(f"[!] Check logs/{name}.log")
+                log_path = LOGS / f"{name}.log"
+                if log_path.exists():
+                    print(f"=== Last lines of logs/{name}.log ===")
+                    try:
+                        print(log_path.read_text(encoding="utf-8", errors="ignore")[-2000:])
+                    except Exception:
+                        pass
 
                 for _, running_process, _ in processes:
                     if running_process.poll() is None:
@@ -253,18 +261,22 @@ def main():
     if all_ready:
         print("\n[+] All services are UP and healthy!\n")
     else:
-        print("\n[-] Warning: Some services did not become healthy.")
-        print("[!] Check the individual files inside logs/")
+        print("\n[-] Warning: Some services did not become healthy within timeout.")
+        print("[!] Service status check details:")
+        for name, process, health_url in processes:
+            status_str = "RUNNING" if process.poll() is None else f"EXITED({process.returncode})"
+            health_str = "OK" if (health_url and check_url(health_url)) else "PENDING/FAILED"
+            print(f"    - {name} [{status_str}] -> healthcheck {health_url}: {health_str}")
 
     print("======================================================")
     print(" VERITAS - Workplace Compliance Desk")
     print("======================================================")
-    print(" Web UI:         http://localhost:8000")
-    print(" API Docs:       http://localhost:8000/docs")
-    print(" Researcher:     http://localhost:8001/health")
-    print(" Advisor:        http://localhost:8002/health")
-    print(" Mock LLM:       http://localhost:8080/health")
-    print(" Worker Metrics: http://localhost:9101/metrics")
+    print(f" Web UI:         http://0.0.0.0:{API_PORT}")
+    print(f" API Docs:       http://0.0.0.0:{API_PORT}/docs")
+    print(" Researcher:     http://127.0.0.1:8001/health")
+    print(" Advisor:        http://127.0.0.1:8002/health")
+    print(" Mock LLM:       http://127.0.0.1:8080/health")
+    print(" Worker Metrics: http://127.0.0.1:9101/metrics")
     print("======================================================")
     print("Press Ctrl+C to stop all services.\n")
 
@@ -296,6 +308,13 @@ def main():
                         f"[-] Service {name} stopped "
                         f"with code {process.returncode}!"
                     )
+                    log_path = LOGS / f"{name}.log"
+                    if log_path.exists():
+                        print(f"=== Last lines of logs/{name}.log ===")
+                        try:
+                            print(log_path.read_text(encoding="utf-8", errors="ignore")[-2000:])
+                        except Exception:
+                            pass
                     shutdown()
 
             time.sleep(2)
