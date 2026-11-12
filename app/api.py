@@ -6,7 +6,12 @@ Why async + polling: runs take tens of seconds (several model calls). Holding an
 HTTP connection that long ties up proxies/timeouts and couples client latency to
 provider latency. 202 + poll is stateless for the client, trivially retryable,
 and needs no inbound network path to the caller (a callback would add SSRF and
-delivery-retry concerns for no benefit here)."""
+delivery-retry concerns for no benefit here).
+
+Dual-Portal Extension (2026): New /auth, /employee, /hr, /admin routers added.
+All portal routes require JWT authentication. The existing /v1/* endpoints are
+preserved exactly. The frontend (web/index.html) now serves the dual-portal SPA.
+"""
 import hashlib
 import json
 import logging
@@ -16,21 +21,57 @@ from pathlib import Path
 
 from fastapi import HTTPException, Request
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from rq import Queue
 
 from . import live_eval, metrics, prompts, state
 from .config import settings
 from .contracts import AskRequest, FeedbackIn, field_errors
+from .db import init_db
 from .guardrails import scan_fields
 from .logging_setup import log
 from .ratelimit import check as rate_check
+from .routers.admin_router import router as admin_router
+from .routers.auth_router import router as auth_router
+from .routers.employee_router import router as employee_router
+from .routers.hr_router import router as hr_router
 from .service_base import make_app
 
 L = logging.getLogger("api")
-app = make_app("api", "Workplace Compliance Advisory Desk", None)
+app = make_app("api", "VERITAS — Workplace Statutory Compliance Intelligence", None)
 WEB = Path(__file__).resolve().parent.parent / "web"
 
+# ─────────────────────────── CORS ────────────────────────────────────────────
+# Allow the front-end (served from same origin or localhost dev) to call the API.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],   # tighten in production with specific origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# ─────────────────────────── Database init on startup ────────────────────────
+
+@app.on_event("startup")
+def startup():
+    try:
+        init_db()
+        L.info("Database tables verified/created on startup")
+    except Exception as e:
+        L.error("Database init failed on startup: %s", e)
+        # Do not crash — Redis-only features still work
+
+
+# ─────────────────────────── Mount new routers ───────────────────────────────
+app.include_router(auth_router)
+app.include_router(employee_router)
+app.include_router(hr_router)
+app.include_router(admin_router)
+
+
+# ─────────────────────────── Existing API (unchanged) ────────────────────────
 
 def quarantine(reason: str, raw, errors, client=None):
     qid = uuid.uuid4().hex[:12]

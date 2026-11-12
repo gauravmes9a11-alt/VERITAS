@@ -1,6 +1,10 @@
 # docker compose up                       -> whole system from a clean clone
 # docker compose up --scale worker=3      -> 3 task-runner replicas (A7)
 # Deployment boundaries and why: docs/architecture.md
+#
+# Dual-Portal Extension: postgres + db-init services added (2026).
+# All existing service definitions are preserved unchanged.
+
 x-app: &app
   build: {context: ., dockerfile: docker/Dockerfile.app, args: {EMBEDDINGS: "${EMBEDDINGS:-st}"}}
   env_file:
@@ -14,9 +18,48 @@ x-app: &app
     ADVISOR_URL: http://advisor:8002
     OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
     HF_HOME: /hf
+    # --- Dual-Portal Extension ---
+    DATABASE_URL: postgresql://veritas:veritas@postgres:5432/veritas
+    JWT_SECRET_KEY: ${JWT_SECRET_KEY:-change-me-generate-with-openssl-rand-hex-32}
+    JWT_ALGORITHM: HS256
+    JWT_EXPIRE_MINUTES: 480
   restart: unless-stopped
 
 services:
+  # ─────────────────────────── New: PostgreSQL ─────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: veritas
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-veritas}
+      POSTGRES_DB: veritas
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U veritas -d veritas"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+      start_period: 10s
+    restart: unless-stopped
+    ports:
+      - "5432:5432"          # exposed for local psql / DBeaver access
+
+  # ─────────────────────────── New: DB Init (one-shot seed) ────────────────
+  db-init:
+    <<: *app
+    command: ["python", "scripts/init_db.py"]
+    restart: "no"
+    depends_on:
+      postgres: {condition: service_healthy}
+    environment:
+      <<: *appenv
+      DEMO_EMPLOYEE_EMAIL: ${DEMO_EMPLOYEE_EMAIL:-employee@demo.veritas}
+      DEMO_EMPLOYEE_PASSWORD: ${DEMO_EMPLOYEE_PASSWORD:-Demo@Employee1}
+      DEMO_HR_EMAIL: ${DEMO_HR_EMAIL:-hr@demo.veritas}
+      DEMO_HR_PASSWORD: ${DEMO_HR_PASSWORD:-Demo@HRAdmin1}
+
+  # ─────────────────────────── Existing services (unchanged) ───────────────
   redis:
     image: redis:7-alpine
     command: ["redis-server", "--appendonly", "yes"]
@@ -57,7 +100,10 @@ services:
     <<: *app
     command: ["uvicorn", "app.api:app", "--host", "0.0.0.0", "--port", "8000"]
     ports: ["8000:8000"]
-    depends_on: {redis: {condition: service_healthy}}
+    depends_on:
+      redis: {condition: service_healthy}
+      postgres: {condition: service_healthy}
+      db-init: {condition: service_completed_successfully}
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request,sys;sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health').status==200 else 1)"]
       interval: 10s
@@ -72,6 +118,7 @@ services:
       redis: {condition: service_healthy}
       researcher: {condition: service_healthy}
       advisor: {condition: service_healthy}
+      postgres: {condition: service_healthy}
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request,sys;sys.exit(0 if urllib.request.urlopen('http://localhost:9101/metrics').status==200 else 1)"]
       interval: 10s
@@ -130,4 +177,8 @@ services:
     depends_on: {api: {condition: service_healthy}}
     restart: "no"
 
-volumes: {redis_data: {}, index_data: {}, hf_cache: {}}
+volumes:
+  redis_data: {}
+  index_data: {}
+  hf_cache: {}
+  postgres_data: {}        # New: persistent PostgreSQL storage

@@ -58,6 +58,11 @@ class Settings:
     redis_url: str
     researcher_url: str
     advisor_url: str
+    # --- Dual-Portal Extension ---
+    database_url: str
+    jwt_secret_key: str
+    jwt_algorithm: str
+    jwt_expire_minutes: int
 
 
 def load() -> Settings:
@@ -103,6 +108,11 @@ def load() -> Settings:
         redis_url=e("REDIS_URL", "redis://localhost:6379/0"),
         researcher_url=e("RESEARCHER_URL", "http://researcher:8001"),
         advisor_url=e("ADVISOR_URL", "http://advisor:8002"),
+        # --- Dual-Portal Extension ---
+        database_url=e("DATABASE_URL", "sqlite:///veritas.db"),
+        jwt_secret_key=e("JWT_SECRET_KEY", "change-me-to-a-random-64-char-secret-for-production"),
+        jwt_algorithm=e("JWT_ALGORITHM", "HS256"),
+        jwt_expire_minutes=_i("JWT_EXPIRE_MINUTES", 480),
     )
 
 
