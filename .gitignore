@@ -16,4 +16,8 @@ results/
 ~$*
 *.tmp
 *.orig
-test_auth.db
+*.db
+*.sqlite
+*.sqlite3
+*.docx
+
