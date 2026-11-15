@@ -13,7 +13,7 @@ from .telemetry import init_tracing
 if __name__ == "__main__":
     logging_setup.setup("worker")
     init_tracing("worker")
-    start_http_server(9101)
+    start_http_server(9101, addr="127.0.0.1")
     from . import coordinator  # noqa: F401  (registers metrics, builds graph)
     q = Queue("runs", connection=rq_conn())
     logging.getLogger("worker").info("worker started")

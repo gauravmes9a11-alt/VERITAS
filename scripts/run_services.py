@@ -1,4 +1,4 @@
-"""Run all Workplace Compliance Desk services locally on Windows/Linux without Docker.
+"""Run all Workplace Compliance Desk services locally on Windows/Linux or in Cloud (Railway/Docker).
 Usage:
     python scripts/run_services.py
 """
@@ -15,15 +15,30 @@ LOGS = ROOT / "logs"
 INDEX_ROOT = ROOT / "data" / "index"
 CORPUS_DIR = ROOT / "corpus"
 
+PORT = int(os.environ.get("PORT", "8000"))
+API_HOST = "0.0.0.0"
+
 SERVICES = [
     {"name": "stub", "cmd": [sys.executable, "-m", "uvicorn", "stub.app:app", "--host", "127.0.0.1", "--port", "8080", "--log-level", "info"], "health": "http://127.0.0.1:8080/health"},
     {"name": "researcher", "cmd": [sys.executable, "-m", "uvicorn", "app.agents.researcher_service:app", "--host", "127.0.0.1", "--port", "8001", "--log-level", "info"], "health": "http://127.0.0.1:8001/health"},
     {"name": "advisor", "cmd": [sys.executable, "-m", "uvicorn", "app.agents.advisor_service:app", "--host", "127.0.0.1", "--port", "8002", "--log-level", "info"], "health": "http://127.0.0.1:8002/health"},
-    {"name": "api", "cmd": [sys.executable, "-m", "uvicorn", "app.api:app", "--host", "127.0.0.1", "--port", "8000", "--log-level", "info"], "health": "http://127.0.0.1:8000/health"},
+    {"name": "api", "cmd": [sys.executable, "-m", "uvicorn", "app.api:app", "--host", API_HOST, "--port", str(PORT), "--log-level", "info"], "health": f"http://127.0.0.1:{PORT}/health"},
     {"name": "worker", "cmd": [sys.executable, "-m", "app.worker"], "health": "http://127.0.0.1:9101/metrics"},
 ]
 
 def check_redis():
+    redis_url = os.environ.get("REDIS_URL")
+    if redis_url and not any(h in redis_url for h in ("127.0.0.1", "localhost")):
+        try:
+            import redis
+            client = redis.Redis.from_url(redis_url, socket_timeout=3.0)
+            if client.ping():
+                print(f"[+] Remote Redis reachable at {redis_url[:30]}...")
+                return True
+        except Exception as e:
+            print(f"[-] Could not connect to remote Redis ({redis_url[:30]}...): {e}")
+
+    # Check local port 6379
     try:
         with socket.create_connection(("127.0.0.1", 6379), timeout=1.5):
             print("[+] Redis is running on 127.0.0.1:6379")
@@ -31,6 +46,17 @@ def check_redis():
     except OSError:
         pass
 
+    # If running in Linux container (Docker / Railway single-container mode)
+    try:
+        subprocess.run(["redis-server", "--daemonize", "yes", "--bind", "127.0.0.1", "--protected-mode", "no"], check=True, capture_output=True)
+        time.sleep(1.5)
+        with socket.create_connection(("127.0.0.1", 6379), timeout=2.0):
+            print("[+] Local Linux Redis daemon started successfully!")
+            return True
+    except Exception:
+        pass
+
+    # WSL fallback for Windows
     print("[*] Redis not responding on 127.0.0.1:6379. Attempting to start via WSL...")
     try:
         subprocess.run(["wsl", "-u", "root", "-e", "bash", "-c", "systemctl stop redis-server 2>/dev/null; killall -9 redis-server 2>/dev/null; redis-server --bind 0.0.0.0 --protected-mode no --daemonize yes"], capture_output=True, text=True, timeout=10)
@@ -55,6 +81,14 @@ def ensure_index():
     else:
         print("[+] Existing index found at", INDEX_ROOT)
 
+def ensure_db():
+    try:
+        init_script = ROOT / "scripts" / "init_db.py"
+        if init_script.exists():
+            subprocess.run([sys.executable, str(init_script)], cwd=str(ROOT), check=False)
+    except Exception as e:
+        print(f"[*] Note on init_db: {e}")
+
 def check_url(url, timeout=2.0):
     try:
         import urllib.request
@@ -68,25 +102,26 @@ def main():
     INDEX_ROOT.mkdir(parents=True, exist_ok=True)
 
     if not check_redis():
-        print("[-] ERROR: Redis server must be running on 127.0.0.1:6379. Please start Redis and try again.")
+        print("[-] ERROR: Redis server must be running on 127.0.0.1:6379 or specified in REDIS_URL. Please start Redis and try again.")
         sys.exit(1)
 
     ensure_index()
+    ensure_db()
 
     # Environment
     env = os.environ.copy()
     env["INDEX_ROOT"] = str(INDEX_ROOT)
     env["CORPUS_DIR"] = str(CORPUS_DIR)
     env["PYTHONPATH"] = str(ROOT)
-    env["REDIS_URL"] = "redis://127.0.0.1:6379/0"
-    env["LLM_BASE_URL"] = "http://127.0.0.1:8080/v1"
-    env["LLM_MODEL"] = "stub-model"
+    env["REDIS_URL"] = os.environ.get("REDIS_URL", "redis://127.0.0.1:6379/0")
+    env["LLM_BASE_URL"] = os.environ.get("LLM_BASE_URL", "http://127.0.0.1:8080/v1")
+    env["LLM_MODEL"] = os.environ.get("LLM_MODEL", "stub-model")
     env["STUB_DELAY_MS"] = os.environ.get("STUB_DELAY_MS", "150")
     env["STUB_JITTER_MS"] = os.environ.get("STUB_JITTER_MS", "30")
-    env["RESEARCHER_URL"] = "http://127.0.0.1:8001"
-    env["ADVISOR_URL"] = "http://127.0.0.1:8002"
-    env["PROMPT_VERSION"] = "v2"
-    env["CACHE_ENABLED"] = "true"
+    env["RESEARCHER_URL"] = os.environ.get("RESEARCHER_URL", "http://127.0.0.1:8001")
+    env["ADVISOR_URL"] = os.environ.get("ADVISOR_URL", "http://127.0.0.1:8002")
+    env["PROMPT_VERSION"] = os.environ.get("PROMPT_VERSION", "v2")
+    env["CACHE_ENABLED"] = os.environ.get("CACHE_ENABLED", "true")
     env.setdefault("DATABASE_URL", f"sqlite:///{ROOT / 'veritas.db'}")
     env.setdefault("PYTHONIOENCODING", "utf-8")
 
@@ -131,8 +166,8 @@ def main():
 
     print("==================================================================")
     print(" Workplace Compliance Advisory Desk is RUNNING:")
-    print("   Web UI:         http://localhost:8000")
-    print("   API Docs:       http://localhost:8000/docs")
+    print(f"   Web UI:         http://localhost:{PORT}")
+    print(f"   API Docs:       http://localhost:{PORT}/docs")
     print("   Researcher Svc: http://localhost:8001/health")
     print("   Advisor Svc:    http://localhost:8002/health")
     print("   Stub LLM:       http://localhost:8080/health")

@@ -138,6 +138,25 @@ docker compose up -d --scale worker=3
 
 ---
 
+### Option 3: Deploying on Railway (Cloud)
+
+You can deploy VERITAS to [Railway](https://railway.app) in under 2 minutes:
+
+1. **Create a New Project on Railway:**
+   - Go to [railway.app](https://railway.app) and select **"New Project"**.
+   - Click **"Deploy from GitHub repo"** and select `gauravmes9a11-alt/VERITAS`.
+2. **Automatic Detection:**
+   - Railway will automatically detect [`railway.json`](railway.json) and [`Dockerfile`](Dockerfile).
+   - The container automatically builds the FAISS legal vector index at build time, launches the background services, and attaches to the provided `$PORT`.
+3. **Generate a Public Domain:**
+   - In your Railway service settings under **Networking**, click **"Generate Domain"** (e.g., `veritas-production.up.railway.app`).
+   - Open your generated URL to access the Dual-Portal Web UI!
+4. *(Optional)* **Add Railway Redis / PostgreSQL:**
+   - Click **"+ New"** $\rightarrow$ **"Database"** $\rightarrow$ **"Add Redis"** (or PostgreSQL).
+   - Railway automatically sets the `REDIS_URL` / `DATABASE_URL` environment variables, and VERITAS will seamlessly connect to them.
+
+---
+
 ## 📡 REST API Reference
 
 Full OpenAPI documentation is available interactively at `http://localhost:8000/docs`.
