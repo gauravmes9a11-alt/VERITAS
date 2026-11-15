@@ -1086,20 +1086,6 @@
             <button class="btn btn-teal" onclick="APP.showEmpSubView('calc')">Check Gratuity Now</button>
           </div>
 
-          <!-- Personal Notifications & Updates (Requirement 2) -->
-          <div class="glass-card" style="margin-bottom: 2rem;">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
-              <div style="display: flex; align-items: center; gap: 0.6rem;">
-                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--accent-teal);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                <h3 style="font-size: 1.15rem;">Personal Notifications & Updates</h3>
-              </div>
-              <span class="badge badge-teal" id="emp-notif-count">0 Updates</span>
-            </div>
-            <div id="emp-notif-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
-              <div class="text-secondary text-xs">No active alerts. All compliance assessments are up to date.</div>
-            </div>
-          </div>
-
           <!-- Recent Applications Table -->
           <div class="glass-card">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
@@ -1429,10 +1415,6 @@
             <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
             Dashboard
           </a>
-          <a class="nav-item" onclick="APP.showHrSubView('calc')">
-            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-            Gratuity Calculator
-          </a>
           <a class="nav-item" onclick="APP.showHrSubView('employees')">
             <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             Employee Management
@@ -1451,11 +1433,7 @@
           </a>
           <a class="nav-item" onclick="APP.showHrSubView('compliance')">
             <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-            Statutory Rules
-          </a>
-          <a class="nav-item" onclick="APP.showHrSubView('audit')">
-            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
-            Audit History
+            Compliance Settings
           </a>
           <div style="flex: 1;"></div>
           <a class="nav-item" onclick="APP.logout()" style="color: var(--accent-red);">
@@ -1842,132 +1820,6 @@
           </div>
         </div>
 
-        <!-- SUB-VIEW G: INTEGRATED HR GRATUITY CALCULATOR (Requirement 3) -->
-        <div id="subview-hr-calc" class="subview">
-          <div class="page-header">
-            <div>
-              <h1 class="page-title">Statutory Gratuity Calculator & Simulator</h1>
-              <p class="page-subtitle">Simulate employee gratuity entitlements, test edge cases (fixed-term vs permanent), and pre-fill calculations for existing employees</p>
-            </div>
-          </div>
-
-          <div class="calc-layout">
-            <!-- Left Form Area -->
-            <div class="glass-card">
-              <div style="margin-bottom: 1.25rem;">
-                <label class="form-label">Pre-fill From Employee (Optional)</label>
-                <select id="hr-calc-emp-select" class="select-control" onchange="APP.onHrCalcSelectEmployee(this.value)">
-                  <option value="">Custom calculation (no employee pre-fill)...</option>
-                </select>
-              </div>
-
-              <div class="form-grid-2">
-                <div class="form-group">
-                  <label class="form-label">Date of Joining (DOJ) <span class="req">*</span></label>
-                  <input type="date" id="hr-calc-doj" class="input-control" required oninput="APP.updateHrLiveCalc()">
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Last Working Date (LWD)</label>
-                  <input type="date" id="hr-calc-lwd" class="input-control" oninput="APP.updateHrLiveCalc()">
-                </div>
-              </div>
-
-              <div class="form-grid-2">
-                <div class="form-group">
-                  <label class="form-label">Employment Type <span class="req">*</span></label>
-                  <select id="hr-calc-type" class="select-control" required onchange="APP.updateHrLiveCalc()">
-                    <option value="permanent">Permanent</option>
-                    <option value="fixed_term">Fixed-term Contract</option>
-                    <option value="contractual">Contractual</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Salary Rate Basis</label>
-                  <select id="hr-calc-sal-type" class="select-control" onchange="APP.updateHrLiveCalc()">
-                    <option value="monthly">Monthly-rated (divided by 26)</option>
-                    <option value="daily">Daily-rated</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-grid-2">
-                <div class="form-group">
-                  <label class="form-label">Monthly Basic Salary (INR) <span class="req">*</span></label>
-                  <input type="number" id="hr-calc-basic" class="input-control mono" required min="0" placeholder="e.g. 50000" oninput="APP.updateHrLiveCalc()">
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Dearness Allowance (DA) (INR)</label>
-                  <input type="number" id="hr-calc-da" class="input-control mono" min="0" value="0" placeholder="0" oninput="APP.updateHrLiveCalc()">
-                </div>
-              </div>
-
-              <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
-                <button type="button" class="btn btn-blue" style="flex: 1;" onclick="APP.transferHrCalcToAi()">
-                  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                  Transfer to Formal AI Assessment
-                </button>
-                <button type="button" class="btn btn-surface" onclick="APP.resetHrCalc()">Reset</button>
-              </div>
-            </div>
-
-            <!-- Right Live Calculation Panel -->
-            <div class="glass-card" style="border-color: rgba(59, 130, 246, 0.3);">
-              <h3 style="font-size: 1.15rem; color: #60a5fa; margin-bottom: 1.25rem;">Calculation & Proviso Analysis</h3>
-
-              <div class="live-calc-box" style="border-color: rgba(59, 130, 246, 0.25);">
-                <div class="live-calc-title">ESTIMATED STATUTORY GRATUITY</div>
-                <div class="live-calc-amount" id="hr-live-calc-amount" style="color: #60a5fa;">₹0</div>
-                <div class="live-calc-sub" id="hr-live-calc-wages">Eligible Wages: ₹0</div>
-              </div>
-
-              <div class="calc-var-row"><span>Total Continuous Service</span><span id="hr-live-calc-tenure" class="mono font-semibold">0.00 years</span></div>
-              <div class="calc-var-row"><span>Completed Full Years</span><span id="hr-live-calc-completed" class="mono">0 yrs</span></div>
-              <div class="calc-var-row"><span>6-Month Rounding Rule (Sec 4(2))</span><span id="hr-live-calc-rounding" class="mono">No (0.0 mo)</span></div>
-              <div class="calc-var-row"><span>Statutory Multiplier Years</span><span id="hr-live-calc-effective" class="mono font-semibold" style="color: #60a5fa;">0 yrs</span></div>
-              <div class="calc-var-row"><span>Applied Formula</span><span id="hr-live-calc-formula" class="mono text-xs text-secondary">—</span></div>
-              <div class="calc-var-row"><span>Statutory Ceiling (Sec 4(3))</span><span class="mono">₹20,00,000 Max</span></div>
-              <div class="calc-var-row"><span>Eligibility Status</span><span id="hr-live-calc-eligibility" class="badge badge-amber text-xs">Awaiting Inputs</span></div>
-
-              <div id="hr-live-calc-notes-box" style="margin-top: 1rem; display: none;" class="calc-note-box"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- SUB-VIEW H: AUDIT LOG (Requirement 3) -->
-        <div id="subview-hr-audit" class="subview">
-          <div class="page-header">
-            <div>
-              <h1 class="page-title">Compliance Audit History</h1>
-              <p class="page-subtitle">Immutable security log of all user logins, registrations, employee updates, and statutory reviews</p>
-            </div>
-            <button class="btn btn-surface btn-sm" onclick="APP.loadHrAudit()">
-              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-              Refresh Logs
-            </button>
-          </div>
-
-          <div class="glass-card">
-            <div class="table-container">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>Timestamp</th>
-                    <th>Action</th>
-                    <th>Performed By</th>
-                    <th>Target</th>
-                    <th>IP Address</th>
-                    <th>Details</th>
-                  </tr>
-                </thead>
-                <tbody id="hr-audit-tbody">
-                  <tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading audit trail...</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
       </main>
     </div>
   </div>
@@ -2143,35 +1995,25 @@
     const APP = {
       user: null,
       token: localStorage.getItem('veritas_token') || null,
-      role: localStorage.getItem('veritas_role') || null,
+      role: (localStorage.getItem('veritas_role') || '').toLowerCase() || null,  // backend sends EMPLOYEE / HR_ADMIN
       currentView: 'view-landing',
       currentSubView: 'dash',
       pollIntervals: {},
       chartStatus: null,
       chartRoutes: null,
       activeApplicationId: null,
-      hrEmployeesCache: [],
 
-      async init() {
+      init() {
         console.log("VERITAS Single Page Application initialized");
         this.setupPopState();
-        if (this.token) {
-          try {
-            const me = await this.api('/auth/me');
-            this.user = me;
-            this.role = (me.role || '').toUpperCase();
-            localStorage.setItem('veritas_role', this.role);
-            if (this.role === 'EMPLOYEE') {
-              this.showView('view-emp-dash');
-              this.loadEmployeeDashboard();
-            } else if (this.role === 'HR_ADMIN' || this.role === 'ADMIN') {
-              this.showView('view-hr-dash');
-              this.loadHrDashboard();
-            } else {
-              this.logout();
-            }
-          } catch (e) {
-            console.warn("Session restore failed, logging out:", e);
+        if (this.token && this.role) {
+          if (this.role === 'employee') {
+            this.showView('view-emp-dash');
+            this.loadEmployeeDashboard();
+          } else if (this.role === 'hr_admin' || this.role === 'admin') {
+            this.showView('view-hr-dash');
+            this.loadHrDashboard();
+          } else {
             this.logout();
           }
         } else {
@@ -2181,26 +2023,6 @@
 
       // ────────────────────── ROUTING & VIEW CONTROL ──────────────────────
       showView(viewId) {
-        // Enforce role-based access guardrails (Requirement 4 & 6)
-        const normRole = (this.role || '').toUpperCase();
-        if (viewId === 'view-emp-dash') {
-          if (!this.token || normRole !== 'EMPLOYEE') {
-            this.toast('Access denied: Employee Portal is restricted to Employee accounts.', 'error');
-            if (normRole === 'HR_ADMIN' || normRole === 'ADMIN') {
-              return this.showView('view-hr-dash');
-            }
-            return this.showView('view-landing');
-          }
-        } else if (viewId === 'view-hr-dash') {
-          if (!this.token || (normRole !== 'HR_ADMIN' && normRole !== 'ADMIN')) {
-            this.toast('Access denied: HR Portal is restricted to HR Administrators.', 'error');
-            if (normRole === 'EMPLOYEE') {
-              return this.showView('view-emp-dash');
-            }
-            return this.showView('view-landing');
-          }
-        }
-
         document.querySelectorAll('.view-container').forEach(el => el.classList.remove('active'));
         const target = document.getElementById(viewId);
         if (target) {
@@ -2251,19 +2073,16 @@
           this.currentSubView = subId;
         }
 
-        // 8 Nav items: dash(0), calc(1), employees(2), claims(3), ai(4), reports(5), compliance(6), audit(7)
-        const navMap = { 'dash': 0, 'calc': 1, 'employees': 2, 'claims': 3, 'ai': 4, 'reports': 5, 'compliance': 6, 'audit': 7 };
+        const navMap = { 'dash': 0, 'employees': 1, 'claims': 2, 'ai': 3, 'reports': 4, 'compliance': 5 };
         const navs = document.querySelectorAll('#hr-sidebar .nav-item');
         if (navMap[subId] !== undefined && navs[navMap[subId]]) {
           navs[navMap[subId]].classList.add('active');
         }
 
-        if (subId === 'calc') this.loadHrCalc();
         if (subId === 'employees') this.loadHrEmployees();
         if (subId === 'claims') this.loadHrClaims();
         if (subId === 'ai') this.loadHrAiInit();
         if (subId === 'reports') this.loadHrReports();
-        if (subId === 'audit') this.loadHrAudit();
         if (subId === 'dash') this.loadHrDashboard();
         if (window.innerWidth <= 900) this.closeSidebar();
       },
@@ -2360,18 +2179,25 @@
         try {
           const res = await this.api('/auth/login', {
             method: 'POST',
-            body: JSON.stringify({ email, password, portal })
+            body: JSON.stringify({ email, password })
           });
 
+          const role = String(res.role || '').toLowerCase();   // backend sends EMPLOYEE / HR_ADMIN
+          const isHrRole = role === 'hr_admin' || role === 'admin';
+          if ((portal === 'employee' && isHrRole) || (portal === 'hr' && !isHrRole)) {
+            throw new Error(portal === 'hr'
+              ? 'This account is not an HR account. Use the Employee Portal.'
+              : 'This is an HR account. Use the HR Portal.');
+          }
+
           this.token = res.access_token;
-          this.role = (res.role || '').toUpperCase();
-          this.user = res;
+          this.role = role;
           localStorage.setItem('veritas_token', res.access_token);
-          localStorage.setItem('veritas_role', this.role);
+          localStorage.setItem('veritas_role', role);
 
           this.toast(`Welcome back, ${res.full_name}`, 'success');
 
-          if (this.role === 'EMPLOYEE') {
+          if (this.role === 'employee') {
             this.showView('view-emp-dash');
             this.loadEmployeeDashboard();
           } else {
@@ -2409,8 +2235,7 @@
           });
 
           this.token = res.access_token;
-          this.role = (res.role || '').toUpperCase();
-          this.user = res;
+          this.role = String(res.role || '').toLowerCase();
           localStorage.setItem('veritas_token', res.access_token);
           localStorage.setItem('veritas_role', this.role);
 
@@ -2428,12 +2253,10 @@
       logout() {
         this.token = null;
         this.role = null;
-        this.user = null;
         localStorage.removeItem('veritas_token');
         localStorage.removeItem('veritas_role');
         Object.values(this.pollIntervals).forEach(clearInterval);
         this.pollIntervals = {};
-        document.body.classList.remove('theme-hr');
         this.showView('view-landing');
         this.toast('Signed out successfully.', 'info');
       },
@@ -2565,60 +2388,6 @@
           document.getElementById('emp-stat-pending').textContent = pending;
           document.getElementById('emp-stat-eligible').textContent = eligible;
           document.getElementById('emp-stat-escalated').textContent = escalated;
-
-          // Personal Notifications (Requirement 2)
-          const notifList = document.getElementById('emp-notif-list');
-          const notifCount = document.getElementById('emp-notif-count');
-          if (notifList && appsRes.items) {
-            const notifs = [];
-            appsRes.items.forEach(a => {
-              if (a.status === 'APPROVED') {
-                notifs.push({
-                  type: 'success',
-                  title: `Gratuity Claim #${a.id} Approved`,
-                  msg: `Your gratuity claim submitted on ${new Date(a.created_at * 1000).toLocaleDateString()} has been approved.`,
-                  time: new Date(a.updated_at ? a.updated_at * 1000 : a.created_at * 1000).toLocaleDateString()
-                });
-              } else if (a.status === 'REJECTED') {
-                notifs.push({
-                  type: 'error',
-                  title: `Gratuity Claim #${a.id} Rejected`,
-                  msg: `Your gratuity claim submitted on ${new Date(a.created_at * 1000).toLocaleDateString()} was reviewed and not approved.`,
-                  time: new Date(a.updated_at ? a.updated_at * 1000 : a.created_at * 1000).toLocaleDateString()
-                });
-              } else if (a.status === 'PENDING_HR_REVIEW') {
-                notifs.push({
-                  type: 'info',
-                  title: `Claim #${a.id} Pending HR Review`,
-                  msg: `Your claim has completed statutory checks and is awaiting decisioning by HR administration.`,
-                  time: new Date(a.created_at * 1000).toLocaleDateString()
-                });
-              } else if (a.status === 'AI_PROCESSING') {
-                notifs.push({
-                  type: 'info',
-                  title: `Claim #${a.id} In AI Processing`,
-                  msg: `Statutory verification engine is analyzing continuous service records and legal provisos.`,
-                  time: new Date(a.created_at * 1000).toLocaleDateString()
-                });
-              }
-            });
-
-            if (notifs.length > 0) {
-              if (notifCount) notifCount.textContent = `${notifs.length} Updates`;
-              notifList.innerHTML = notifs.map(n => `
-                <div style="padding: 0.75rem 1rem; border-radius: var(--radius-sm); background: var(--bg-surface); border-left: 3px solid ${n.type === 'success' ? 'var(--accent-teal)' : n.type === 'error' ? 'var(--accent-red)' : '#3b82f6'};">
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-                    <strong style="font-size: 0.88rem; color: var(--text-primary);">${n.title}</strong>
-                    <span style="font-size: 0.75rem; color: var(--text-muted);">${n.time}</span>
-                  </div>
-                  <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0;">${n.msg}</p>
-                </div>
-              `).join('');
-            } else {
-              if (notifCount) notifCount.textContent = '0 Updates';
-              notifList.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 1.25rem; font-size: 0.88rem;">No unread statutory notifications.</div>`;
-            }
-          }
 
         } catch (err) {
           console.error(err);
@@ -3213,167 +2982,6 @@
         } finally {
           btn.disabled = false;
           btn.innerHTML = 'Commit Official Decision to Audit Record';
-        }
-      },
-
-      async loadHrCalc() {
-        try {
-          const res = await this.api('/hr/employees');
-          this.hrEmployeesCache = res.items || [];
-          const sel = document.getElementById('hr-calc-emp-select');
-          if (sel) {
-            sel.innerHTML = '<option value="">Select Employee to Pre-fill Data...</option>' +
-              this.hrEmployeesCache.map(u => `<option value="${u.profile_id}">${u.full_name} (${u.employee_id_code || u.email})</option>`).join('');
-          }
-          this.updateHrLiveCalc();
-        } catch (err) {
-          console.error('Error loading employees for calculator:', err);
-        }
-      },
-
-      onHrCalcSelectEmployee(profileId) {
-        if (!profileId) return;
-        const emp = (this.hrEmployeesCache || []).find(e => String(e.profile_id) === String(profileId));
-        if (emp) {
-          if (emp.date_of_joining) {
-            const dojInput = document.getElementById('hr-calc-doj');
-            if (dojInput) dojInput.value = emp.date_of_joining;
-          }
-          if (emp.employment_type) {
-            const typeSel = document.getElementById('hr-calc-type');
-            if (typeSel) typeSel.value = emp.employment_type;
-          }
-          this.updateHrLiveCalc();
-        }
-      },
-
-      updateHrLiveCalc() {
-        const basic = parseFloat(document.getElementById('hr-calc-basic')?.value) || 0;
-        const da = parseFloat(document.getElementById('hr-calc-da')?.value) || 0;
-        const doj = document.getElementById('hr-calc-doj')?.value;
-        const lwd = document.getElementById('hr-calc-lwd')?.value;
-        const empType = document.getElementById('hr-calc-type')?.value || 'permanent';
-        const salType = document.getElementById('hr-calc-sal-type')?.value || 'monthly';
-
-        const calc = this.calculateGratuity(basic, da, salType, doj, lwd, empType);
-
-        const elAmount = document.getElementById('hr-live-calc-amount');
-        const elWages = document.getElementById('hr-live-calc-wages');
-        const elTenure = document.getElementById('hr-live-calc-tenure');
-        const elCompleted = document.getElementById('hr-live-calc-completed');
-        const elRounding = document.getElementById('hr-live-calc-rounding');
-        const elEffective = document.getElementById('hr-live-calc-effective');
-        const elFormula = document.getElementById('hr-live-calc-formula');
-        const elElig = document.getElementById('hr-live-calc-eligibility');
-        const noteBox = document.getElementById('hr-live-calc-notes-box');
-
-        if (elAmount) elAmount.textContent = '₹' + Math.round(calc.gratuity).toLocaleString('en-IN');
-        if (elWages) elWages.textContent = `Eligible Wages: ₹${calc.eligibleWage.toLocaleString('en-IN')}`;
-        if (elTenure) elTenure.textContent = `${calc.totalYears.toFixed(2)} years`;
-        if (elCompleted) elCompleted.textContent = `${calc.completedYears} yrs`;
-        if (elRounding) elRounding.textContent = calc.remainingMonths >= 6 ? `Yes (+${calc.remainingMonths.toFixed(1)} mo)` : `No (${calc.remainingMonths.toFixed(1)} mo)`;
-        if (elEffective) elEffective.textContent = `${calc.effectiveYears} yrs`;
-        if (elFormula) elFormula.textContent = calc.formula;
-
-        if (elElig) {
-          if (!doj || calc.eligibleWage <= 0) {
-            elElig.className = 'badge badge-amber text-xs';
-            elElig.textContent = 'Awaiting Inputs';
-          } else if (calc.totalYears >= 5 || empType === 'fixed_term') {
-            elElig.className = 'badge badge-teal text-xs';
-            elElig.textContent = 'Statutorily Eligible';
-          } else {
-            elElig.className = 'badge badge-red text-xs';
-            elElig.textContent = 'Under Tenure Threshold';
-          }
-        }
-
-        if (noteBox) {
-          if (calc.notes.length > 0) {
-            noteBox.innerHTML = `<strong>Statutory Note:</strong><br>${calc.notes.join('<br>')}`;
-            noteBox.style.display = 'block';
-          } else if (calc.totalYears > 0 && calc.totalYears < 5 && empType !== 'fixed_term') {
-            noteBox.innerHTML = `<strong>Tenure Threshold Notice:</strong> Continuous service is under 5 completed years (${calc.totalYears.toFixed(2)} yrs). Standard gratuity requires 5 completed years under Sec 4(1).`;
-            noteBox.style.display = 'block';
-          } else if (calc.totalYears >= 5) {
-            noteBox.innerHTML = `<strong>Statutory Criteria Satisfied:</strong> Tenure of ${calc.effectiveYears} effective years meets statutory threshold. Statutory ceiling applies at ₹20 Lakhs.`;
-            noteBox.style.display = 'block';
-          } else {
-            noteBox.style.display = 'none';
-          }
-        }
-      },
-
-      transferHrCalcToAi() {
-        const empVal = document.getElementById('hr-calc-emp-select')?.value || '';
-        const doj = document.getElementById('hr-calc-doj')?.value || '';
-        const lwd = document.getElementById('hr-calc-lwd')?.value || '';
-        const type = document.getElementById('hr-calc-type')?.value || 'permanent';
-        const salType = document.getElementById('hr-calc-sal-type')?.value || 'monthly';
-        const basic = document.getElementById('hr-calc-basic')?.value || '';
-        const da = document.getElementById('hr-calc-da')?.value || '0';
-
-        this.showHrSubView('ai');
-
-        if (document.getElementById('hr-init-emp-select')) document.getElementById('hr-init-emp-select').value = empVal;
-        if (document.getElementById('hr-init-doj')) document.getElementById('hr-init-doj').value = doj;
-        if (document.getElementById('hr-init-lwd')) document.getElementById('hr-init-lwd').value = lwd;
-        if (document.getElementById('hr-init-type')) document.getElementById('hr-init-type').value = type;
-        if (document.getElementById('hr-init-sal-type')) document.getElementById('hr-init-sal-type').value = salType;
-        if (document.getElementById('hr-init-basic')) document.getElementById('hr-init-basic').value = basic;
-        if (document.getElementById('hr-init-da')) document.getElementById('hr-init-da').value = da;
-
-        this.toast('Calculation parameters transferred to AI Assessment form.', 'info');
-      },
-
-      resetHrCalc() {
-        const empSel = document.getElementById('hr-calc-emp-select');
-        if (empSel) empSel.value = '';
-        if (document.getElementById('hr-calc-doj')) document.getElementById('hr-calc-doj').value = '';
-        if (document.getElementById('hr-calc-lwd')) document.getElementById('hr-calc-lwd').value = '';
-        if (document.getElementById('hr-calc-basic')) document.getElementById('hr-calc-basic').value = '';
-        if (document.getElementById('hr-calc-da')) document.getElementById('hr-calc-da').value = '0';
-        this.updateHrLiveCalc();
-        this.toast('Calculator reset to initial state.', 'info');
-      },
-
-      async loadHrAudit() {
-        const tbody = document.getElementById('hr-audit-tbody');
-        if (!tbody) return;
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:2rem;"><div class="spinner"></div> Loading audit trail...</td></tr>`;
-
-        try {
-          const res = await this.api('/hr/audit');
-          const items = res.items || [];
-          if (items.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:2rem;">No audit logs recorded yet.</td></tr>`;
-            return;
-          }
-
-          tbody.innerHTML = items.map(l => {
-            let detailsStr = '—';
-            if (l.details) {
-              try {
-                const parsed = JSON.parse(l.details);
-                detailsStr = `<pre style="font-size:0.75rem; margin:0; white-space:pre-wrap;">${JSON.stringify(parsed, null, 1)}</pre>`;
-              } catch (_) {
-                detailsStr = `<span style="font-size:0.8rem;">${l.details}</span>`;
-              }
-            }
-            const dateStr = l.created_at ? new Date(l.created_at * 1000).toLocaleString() : '—';
-            return `
-              <tr>
-                <td class="mono text-xs">#${l.id}</td>
-                <td style="font-size:0.82rem; white-space:nowrap;">${dateStr}</td>
-                <td><span class="badge badge-surface text-xs font-semibold">${l.action || '—'}</span></td>
-                <td style="font-size:0.85rem;">User #${l.user_id || 'System'}</td>
-                <td style="font-size:0.85rem;">${l.target_type ? `${l.target_type} #${l.target_id || ''}` : '—'}</td>
-                <td>${detailsStr}</td>
-              </tr>
-            `;
-          }).join('');
-        } catch (err) {
-          tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--accent-red); padding:1.5rem;">Failed to load audit history: ${err.message}</td></tr>`;
         }
       },
 

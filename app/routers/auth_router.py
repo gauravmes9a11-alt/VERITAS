@@ -27,7 +27,6 @@ class RegisterRequest(BaseModel):
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str = Field(..., min_length=1, max_length=128)
-    portal: Optional[str] = Field(None, description="Portal context: 'employee' or 'hr'")
 
 
 class TokenResponse(BaseModel):
@@ -133,24 +132,6 @@ def login(req: LoginRequest, request: Request, db: Session = Depends(get_db)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password",
         )
-
-    # Portal validation against actual database role (Requirement 5)
-    if req.portal:
-        portal_clean = req.portal.strip().lower()
-        if portal_clean in ("employee", "emp"):
-            if user.role != UserRole.EMPLOYEE.value:
-                L.warning("Rejected employee portal login for user %s with database role %s", user.email, user.role)
-                raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN,
-                    detail="Access denied: HR credentials cannot be used to sign in to the Employee Portal. Please use the HR Admin Portal.",
-                )
-        elif portal_clean in ("hr", "hr_admin", "admin"):
-            if user.role not in (UserRole.HR_ADMIN.value, "ADMIN"):
-                L.warning("Rejected HR portal login for user %s with database role %s", user.email, user.role)
-                raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN,
-                    detail="Access denied: Employee credentials cannot be used to sign in to the HR Portal. Please use the Employee Portal.",
-                )
     # Update last login
     user.last_login_at = time.time()
     db.commit()

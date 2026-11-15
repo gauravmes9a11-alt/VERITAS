@@ -60,7 +60,7 @@ def seeded_db(test_session_factory):
     """Seed a demo org + HR user directly in the DB (bypassing auth endpoints)."""
     db = test_session_factory()
     now = time.time()
-    org = Organization(name="Test Corp", slug="test-corp", created_at=now, updated_at=now)
+    org = Organization(name="Seeded Corp", slug="seeded-corp", created_at=now, updated_at=now)
     db.add(org)
     db.flush()
     hr = User(
@@ -191,7 +191,8 @@ def test_hr_can_access_hr_dashboard(client, hr_token):
 
 def test_unauthenticated_cannot_access_employee_dashboard(client):
     resp = client.get("/employee/dashboard")
-    assert resp.status_code == 403
+    # FastAPI >= 0.122 returns 401 for a missing bearer token; older versions returned 403.
+    assert resp.status_code in (401, 403)
 
 
 def test_invalid_token_rejected(client):

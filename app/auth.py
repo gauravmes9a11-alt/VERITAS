@@ -2,7 +2,7 @@
 and FastAPI dependencies for route protection.
 
 Security design:
-- Passwords: bcrypt via passlib (work factor ≥12 is the default)
+- Passwords: bcrypt (work factor 12)
 - Tokens: HS256 JWT, signed with JWT_SECRET_KEY, expire in JWT_EXPIRE_MINUTES
 - Role enforcement: require_role(*roles) dependency raises 403 if caller's
   role is not in the permitted set — enforced at the router level
@@ -16,7 +16,7 @@ from typing import Optional
 from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
-from passlib.context import CryptContext
+import bcrypt
 from sqlalchemy.orm import Session
 
 from .config import settings
@@ -28,15 +28,20 @@ L = logging.getLogger("auth")
 # --------------------------------------------------------------------------
 # Password hashing
 # --------------------------------------------------------------------------
-_pwd = CryptContext(schemes=["bcrypt"], deprecated="auto")
+def _prep(plain: str) -> bytes:
+    # bcrypt only uses the first 72 bytes; newer bcrypt versions raise instead of truncating.
+    return plain.encode("utf-8")[:72]
 
 
 def hash_password(plain: str) -> str:
-    return _pwd.hash(plain)
+    return bcrypt.hashpw(_prep(plain), bcrypt.gensalt(rounds=12)).decode("ascii")
 
 
 def verify_password(plain: str, hashed: str) -> bool:
-    return _pwd.verify(plain, hashed)
+    try:
+        return bcrypt.checkpw(_prep(plain), hashed.encode("ascii"))
+    except (ValueError, TypeError):
+        return False
 
 
 # --------------------------------------------------------------------------

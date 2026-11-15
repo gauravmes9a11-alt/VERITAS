@@ -19,9 +19,8 @@ from sqlalchemy.orm import Session
 from ..auth import audit, require_role
 from ..config import settings
 from ..db import get_db
-from ..gratuity_calc import GratuityCalcRequest, GratuityCalcResponse, compute_gratuity
 from ..models import (
-    ApplicationHistory, ApplicationStatus, AuditLog, EmployeeProfile,
+    ApplicationHistory, ApplicationStatus, EmployeeProfile,
     GratuityApplication, HRDecision, HRReview, Organization,
     User, UserRole,
 )
@@ -622,57 +621,6 @@ def reports_summary(db: Session = Depends(get_db), hr: User = Depends(_hr_dep)):
         "organization_id": hr.organization_id,
         "organization_name": hr.organization.name if hr.organization else None,
     }
-
-
-# ─────────────────────────── Routes — Calculator & Audit ─────────────────────
-
-@router.post("/calculate-gratuity", response_model=GratuityCalcResponse)
-def hr_calculate_gratuity(
-    req: GratuityCalcRequest,
-    hr: User = Depends(_hr_dep),
-):
-    """Integrated Gratuity Calculator accessible directly in the HR portal."""
-    _assert_org(hr)
-    return compute_gratuity(req)
-
-
-@router.get("/audit")
-def hr_audit_log(
-    limit: int = 50,
-    db: Session = Depends(get_db),
-    hr: User = Depends(_hr_dep),
-):
-    """Retrieve compliance audit history for the HR administrator's organization."""
-    _assert_org(hr)
-    org_user_ids = [u.id for u in db.query(User.id).filter(User.organization_id == hr.organization_id).all()]
-    logs = (
-        db.query(AuditLog)
-        .filter(AuditLog.user_id.in_(org_user_ids))
-        .order_by(AuditLog.created_at.desc())
-        .limit(min(limit, 100))
-        .all()
-    )
-    items = []
-    for l in logs:
-        u = db.query(User).filter(User.id == l.user_id).first() if l.user_id else None
-        details_obj = None
-        if l.details:
-            try:
-                details_obj = json.loads(l.details)
-            except Exception:
-                details_obj = {"raw": l.details}
-        items.append({
-            "id": l.id,
-            "action": l.action,
-            "user_email": u.email if u else "system",
-            "user_name": u.full_name if u else "System",
-            "target_type": l.target_type,
-            "target_id": l.target_id,
-            "details": details_obj,
-            "ip_address": l.ip_address,
-            "created_at": l.created_at,
-        })
-    return {"total": len(items), "items": items}
 
 
 def _self_url() -> str:

@@ -19,7 +19,6 @@ from sqlalchemy.orm import Session
 from ..auth import audit, require_role
 from ..config import settings
 from ..db import get_db
-from ..gratuity_calc import GratuityCalcRequest, GratuityCalcResponse, compute_gratuity
 from ..models import (
     ApplicationHistory, ApplicationStatus, EmployeeProfile,
     GratuityApplication, HRReview, User, UserRole,
@@ -477,15 +476,6 @@ def get_ai_result(
         return data
     except Exception as e:
         raise HTTPException(502, f"Could not reach AI engine: {e}")
-
-
-@router.post("/calculate-gratuity", response_model=GratuityCalcResponse)
-def employee_calculate_gratuity(
-    req: GratuityCalcRequest,
-    user: User = Depends(_emp_dep),
-):
-    """Statutory Gratuity calculation for the authenticated employee."""
-    return compute_gratuity(req)
 
 
 def _self_url() -> str:

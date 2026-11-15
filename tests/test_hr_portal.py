@@ -220,7 +220,6 @@ def test_hr_can_initiate_assessment(client, hr_token, seed):
     assert resp.status_code == 201
     data = resp.json()
     assert "application_id" in data
-    return data["application_id"]
 
 
 def test_hr_can_record_review(client, hr_token, seed, SessionFactory):

@@ -73,21 +73,39 @@ app.include_router(admin_router)
 
 # ─────────────────────────── Existing API (unchanged) ────────────────────────
 
+_SENSITIVE = ("password", "token", "secret")
+
+
+def _redact(obj):
+    """Never persist credentials, even in a quarantined payload."""
+    if isinstance(obj, dict):
+        return {k: ("***" if any(w in str(k).lower() for w in _SENSITIVE) else _redact(v)) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_redact(v) for v in obj]
+    return obj
+
+
 def quarantine(reason: str, raw, errors, client=None):
     qid = uuid.uuid4().hex[:12]
     rec = {"quarantine_id": qid, "ts": time.time(), "reason": reason, "client_id": client, "errors": errors, "raw": str(raw)[:1500]}
-    state.r().lpush("quarantine", json.dumps(rec, default=str))
-    state.r().ltrim("quarantine", 0, 999)
+    try:
+        state.r().lpush("quarantine", json.dumps(rec, default=str))
+        state.r().ltrim("quarantine", 0, 999)
+    except Exception as e:  # a store outage must not turn a 4xx into a 500
+        L.warning("quarantine store unavailable: %s", e)
     metrics.VALIDATION_REJECTS.labels(reason).inc()
     return qid
 
 
 @app.exception_handler(RequestValidationError)
 async def on_validation(request: Request, exc: RequestValidationError):
+    errors = field_errors(exc.errors())
+    if not request.url.path.startswith("/v1/"):
+        # Portal routes (/auth, /employee, /hr, /admin): plain 422, nothing is stored.
+        return JSONResponse(status_code=422, content={"error": "validation_failed", "errors": errors, "run_started": False})
     body = exc.body if isinstance(exc.body, (dict, list)) else str(exc.body)
     client = body.get("client_id") if isinstance(body, dict) else None
-    errors = field_errors(exc.errors())
-    qid = quarantine("schema_validation", json.dumps(body, default=str), errors, client)
+    qid = quarantine("schema_validation", json.dumps(_redact(body), default=str), errors, client)
     log(L, logging.WARNING, "request quarantined", quarantine_id=qid, errors=len(errors))
     return JSONResponse(status_code=422, content={"error": "validation_failed", "quarantine_id": qid, "errors": errors, "run_started": False})
 
