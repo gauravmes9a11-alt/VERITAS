@@ -242,7 +242,9 @@ python scripts/cache_benchmark.py # Benchmarks L1/L2/L3 cache hit latency (<20ms
 ├── stub/                   # Local deterministic OpenAI-compatible stub LLM provider
 ├── tests/                  # Unit and integration test suites
 ├── web/                    # Single-Page Application (Employee & HR Portals)
+├── Dockerfile              # Production & Railway single-container build
 ├── docker-compose.yml      # Multi-container service composition
+├── railway.json            # Railway deployment configuration
 ├── requirements.txt        # Production dependencies
 └── run_local.ps1           # One-click Windows local orchestrator
 ```
