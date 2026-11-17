@@ -26,3 +26,4 @@ RUN python -m app.corpus.indexer build
 EXPOSE 8000
 
 CMD ["python", "scripts/run_services.py"]
+

@@ -46,7 +46,18 @@ def check_redis():
     except OSError:
         pass
 
-    # If running in Linux container (Docker / Railway single-container mode)
+    # Windows WSL fallback: bind to 0.0.0.0
+    print("[*] Redis not responding on 127.0.0.1:6379. Attempting to start via WSL...")
+    try:
+        subprocess.run(["wsl", "-u", "root", "-e", "bash", "-c", "killall -9 redis-server 2>/dev/null; /usr/bin/redis-server --bind 0.0.0.0 --protected-mode no --daemonize yes"], capture_output=True, text=True, timeout=10)
+        time.sleep(2)
+        with socket.create_connection(("127.0.0.1", 6379), timeout=2.0):
+            print("[+] Redis started successfully via WSL!")
+            return True
+    except Exception as e:
+        print(f"[-] Could not start Redis via WSL: {e}")
+
+    # Linux native fallback
     try:
         subprocess.run(["redis-server", "--daemonize", "yes", "--bind", "127.0.0.1", "--protected-mode", "no"], check=True, capture_output=True)
         time.sleep(1.5)
@@ -56,36 +67,22 @@ def check_redis():
     except Exception:
         pass
 
-    # WSL fallback for Windows
-    print("[*] Redis not responding on 127.0.0.1:6379. Attempting to start via WSL...")
-    try:
-        subprocess.run(["wsl", "-u", "root", "-e", "bash", "-c", "systemctl stop redis-server 2>/dev/null; killall -9 redis-server 2>/dev/null; redis-server --bind 0.0.0.0 --protected-mode no --daemonize yes"], capture_output=True, text=True, timeout=10)
-        time.sleep(2)
-        with socket.create_connection(("127.0.0.1", 6379), timeout=2.0):
-            print("[+] Redis started successfully via WSL!")
-            return True
-    except Exception as e:
-        print(f"[-] Could not start Redis automatically: {e}")
-        return False
+    return False
 
-def ensure_index():
+def ensure_index(env):
     manifest = INDEX_ROOT / "main" / "manifest.json"
     if not manifest.exists():
         print("[*] Index not found at", INDEX_ROOT, "- building now...")
-        env = os.environ.copy()
-        env["INDEX_ROOT"] = str(INDEX_ROOT)
-        env["CORPUS_DIR"] = str(CORPUS_DIR)
-        env["PYTHONPATH"] = str(ROOT)
         subprocess.run([sys.executable, "-m", "app.corpus.indexer", "build"], cwd=str(ROOT), env=env, check=True)
         print("[+] Index built successfully!")
     else:
         print("[+] Existing index found at", INDEX_ROOT)
 
-def ensure_db():
+def ensure_db(env):
     try:
         init_script = ROOT / "scripts" / "init_db.py"
         if init_script.exists():
-            subprocess.run([sys.executable, str(init_script)], cwd=str(ROOT), check=False)
+            subprocess.run([sys.executable, str(init_script)], cwd=str(ROOT), env=env, check=False)
     except Exception as e:
         print(f"[*] Note on init_db: {e}")
 
@@ -105,9 +102,6 @@ def main():
         print("[-] ERROR: Redis server must be running on 127.0.0.1:6379 or specified in REDIS_URL. Please start Redis and try again.")
         sys.exit(1)
 
-    ensure_index()
-    ensure_db()
-
     # Environment
     env = os.environ.copy()
     env["INDEX_ROOT"] = str(INDEX_ROOT)
@@ -124,6 +118,9 @@ def main():
     env["CACHE_ENABLED"] = os.environ.get("CACHE_ENABLED", "true")
     env.setdefault("DATABASE_URL", f"sqlite:///{ROOT / 'veritas.db'}")
     env.setdefault("PYTHONIOENCODING", "utf-8")
+
+    ensure_index(env)
+    ensure_db(env)
 
     procs = []
     log_files = []
